@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora 3D Pro - Impresión & Venta ML</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #a89968;
+            --primary-dark: #8b7355;
+            --primary-light: #c9b8a8;
+            --bg-primary: #faf6f1;
+            --bg-secondary: #fef9f3;
+            --bg-tertiary: #f5ede4;
+            --text-primary: #2d2d2d;
+            --text-secondary: #6b6b6b;
+            --border: #e8ddd0;
+            --success: #7cb342;
+            --warning: #d4a574;
+            --danger: #c17c7c;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #faf6f1 0%, #f5ede4 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+            padding: 20px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: 1em;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--primary-dark);
+            cursor: pointer;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(168, 153, 104, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .settings-btn:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .settings-btn:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* TABS */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn:hover::before {
+            left: 0;
+            opacity: 0.1;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(168, 153, 104, 0.3);
+        }
+
+        .tab-btn.active::before {
+            left: 0;
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* SECTION */
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(168, 153, 104, 0.3), transparent);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(168, 153, 104, 0.3);
+        }
+
+        .section h2 {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary-dark);
+        }
+
+        .section h2::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 24px;
+            background: linear-gradient(180deg, var(--primary), rgba(168, 153, 104, 0.3));
+            border-radius: 2px;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.85em;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        label .hint {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-transform: none;
+            margin-left: 4px;
+        }
+
+        input, select {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(250,246,241,0.5) 100%);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(168, 153, 104, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: var(--primary-light);
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            background: linear-gradient(135deg, rgba(168, 153, 104, 0.08) 0%, rgba(217, 200, 170, 0.08) 100%);
+            border: 1px solid rgba(168, 153, 104, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(168, 153, 104, 0.1);
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-value.highlight {
+            color: var(--success);
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .result-value.warning {
+            color: var(--warning);
+        }
+
+        .result-value.danger {
+            color: var(--danger);
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 12px 24px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            font-family: inherit;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(168, 153, 104, 0.35);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, white 0%, var(--bg-tertiary) 100%);
+            border: 1.5px solid var(--border);
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #a85454 100%);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 20px rgba(193, 124, 124, 0.35);
+        }
+
+        /* TABLE */
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        .sales-table th {
+            background: linear-gradient(135deg, rgba(168, 153, 104, 0.15) 0%, rgba(217, 200, 170, 0.15) 100%);
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--primary);
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sales-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95em;
+        }
+
+        .sales-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .sales-table tbody tr:hover {
+            background: rgba(168, 153, 104, 0.08);
+            transform: translateX(2px);
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(168, 153, 104, 0.12) 0%, rgba(217, 200, 170, 0.12) 100%);
+            border: 1px solid rgba(168, 153, 104, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(168, 153, 104, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(168, 153, 104, 0.15);
+            border-color: var(--primary);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card h3 {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+        }
+
+        .stat-card .value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary);
+            position: relative;
+            z-index: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1px solid;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-info {
+            background: rgba(168, 153, 104, 0.08);
+            border-color: var(--primary);
+            color: var(--text-secondary);
+        }
+
+        .alert-warning {
+            background: rgba(212, 165, 116, 0.08);
+            border-color: var(--warning);
+            color: var(--text-secondary);
+        }
+
+        .alert-success {
+            background: rgba(124, 179, 66, 0.08);
+            border-color: var(--success);
+            color: var(--text-secondary);
+        }
+
+        .alert .icon {
+            font-size: 1.3em;
+            min-width: 24px;
+            margin-top: 2px;
+        }
+
+        /* TOOLTIP */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 10;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--text-primary);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .tooltip:hover::after,
+        .tooltip:hover::before {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* MODAL */
+        #modalFilamento, #modalConfig {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            padding: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-dark);
+            margin-bottom: 24px;
+            font-size: 1.5em;
+        }
+
+        /* NOTIFICATIONS */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 32px rgba(168, 153, 104, 0.3);
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+        }
+
+        /* SCROLL */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                margin-bottom: 32px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .header-right {
+                margin-top: 16px;
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .tabs-wrapper {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .modal-content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>🖨️ Calculadora 3D Pro</h1>
+                <p>Impresión 3D + Mercado Libre</p>
+            </div>
+            <div class="header-right">
+                <button class="settings-btn" onclick="abrirModalConfig()" title="Configuración">⚙️</button>
+            </div>
+        </header>
+
+        <div class="tabs-wrapper">
+            <button class="tab-btn active" data-tab="costo-impresion">Costo de Impresión</button>
+            <button class="tab-btn" data-tab="precio-ml">Precio Mercado Libre</button>
+            <button class="tab-btn" data-tab="simulador-ml">Simulador ML</button>
+            <button class="tab-btn" data-tab="simulador-persona">Simulador Personal</button>
+            <button class="tab-btn" data-tab="ventas">Registro de Ventas</button>
+        </div>
+
+        <!-- TAB 1: COSTO DE IMPRESIÓN -->
+        <div id="costo-impresion" class="tab-content active">
+            <div class="section">
+                <h2>🎨 Calcula el Costo de tu Impresión</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tipo de Filamento</label>
+                        <select id="tipoFilamento">
+                            <option value="pla">PLA Estándar - $23.500/kg</option>
+                            <option value="pla-silk">PLA Silk - $28.600/kg</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Peso del producto <span class="hint">(gramos)</span></label>
+                        <input type="number" id="pesoProducto" placeholder="190" value="190" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Eficiencia de impresión <span class="hint">(%)</span></label>
+                        <input type="number" id="eficiencia" placeholder="95" value="95" min="50" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Tiempo de impresión <span class="hint">(horas)</span></label>
+                        <input type="number" id="horasImpresion" placeholder="3" value="3" min="0.1" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚡ Costo Total</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💰 COSTO TOTAL</span>
+                        <span class="result-value highlight" id="costoTotal">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <span class="icon">ℹ️</span>
+                    <div>
+                        <strong>Este es tu costo mínimo.</strong> No vendas por menos de esto.
+                    </div>
+                </div>
+
+                <button onclick="copiarCosto()">📋 Copiar Costo</button>
+            </div>
+        </div>
+
+        <!-- TAB 2: PRECIO MERCADO LIBRE -->
+        <div id="precio-ml" class="tab-content">
+            <div class="section">
+                <h2>🛒 Configuración Mercado Libre</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Categoría ML <span class="hint tooltip" data-tip="Afecta comisión">?</span></label>
+                        <select id="categoriaML">
+                            <option value="11.62">Hogar (11.62%)</option>
+                            <option value="14.5">Accesorios (14.5%)</option>
+                            <option value="17.75">Otros (17.75%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>¿Ofrecerás cuotas?</label>
+                        <select id="cuotas">
+                            <option value="0">No</option>
+                            <option value="5">3-12 cuotas (5%)</option>
+                            <option value="8.40">3 cuotas sin interés (8.40%)</option>
+                            <option value="12.30">6 cuotas (12.30%)</option>
+                            <option value="15.70">9 cuotas (15.70%)</option>
+                            <option value="19.20">12 cuotas (19.20%)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Precio Recomendado para ML</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💵 Costo de Impresión</span>
+                        <span class="result-value" id="costoImpresionML">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">🎫 Comisión ML (%)</span>
+                        <span class="result-value" id="comisionML">0%</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">🎁 Costo Cuotas</span>
+                        <span class="result-value" id="costoCuotasML">$0.00</span>
+                    </div>
+                    <div class="result-row" style="border-top: 2px solid var(--primary); padding-top: 16px; margin-top: 16px;">
+                        <span class="result-label" style="font-weight: 700;">💰 GANANCIA NETA</span>
+                        <span class="result-value highlight" id="gananciaNeta">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">📊 Margen (%)</span>
+                        <span class="result-value" id="margenPorcentaje">0%</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">💳 PRECIO A PUBLICAR</span>
+                        <span class="result-value" id="precioVentaML">$0.00</span>
+                    </div>
+                </div>
+
+                <div id="alertaML" class="alert alert-warning" style="display: none;">
+                    <span class="icon">⚠️</span>
+                    <span id="textoAlerta"></span>
+                </div>
+
+                <button onclick="calcularPrecioML()">🔄 Calcular</button>
+                <button onclick="copiarPrecioML()" class="btn-secondary">📋 Copiar Precio</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: SIMULADOR ML -->
+        <div id="simulador-ml" class="tab-content">
+            <div class="section">
+                <h2>🎯 Simula tu Ganancia en ML</h2>
+                <div class="alert alert-info">
+                    <span class="icon">💡</span>
+                    <div>
+                        <strong>Prueba precios:</strong> Ingresa el precio que quieras vender y mira exactamente cuánto te queda después de costos y comisiones.
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Precio de Venta en ML <span class="hint">(ARS)</span></label>
+                        <input type="number" id="precioPersonalizadoML" placeholder="18000" value="18000" min="0">
+                    </div>
+                </div>
+
+                <button onclick="simularPrecioML()">🚀 Simular</button>
+            </div>
+
+            <div id="resultadoSimulacionML" class="section" style="display: none;">
+                <h2>📊 Resultado</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💰 Tu Precio</span>
+                        <span class="result-value" id="tuPrecioML">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Costo Impresión</span>
+                        <span class="result-value warning" id="costoDeLaImpML">-$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Comisión ML</span>
+                        <span class="result-value warning" id="comisionDeMLa">-$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Costo Cuotas</span>
+                        <span class="result-value warning" id="cuotasDeMLa">-$0.00</span>
+                    </div>
+                    <div class="result-row" style="border-top: 2px solid var(--primary); padding-top: 16px; margin-top: 16px;">
+                        <span class="result-label" style="font-weight: 700;">💵 TE QUEDA NETO</span>
+                        <span class="result-value highlight" id="teQuedaNetoML">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">📈 Margen</span>
+                        <span class="result-value" id="margenSimML">0%</span>
+                    </div>
+                </div>
+
+                <div id="alertaSimulacionML" class="alert" style="display: none;">
+                    <span class="icon" id="iconoAlertaML">⚠️</span>
+                    <span id="textoAlertaSimML"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: SIMULADOR EN PERSONA -->
+        <div id="simulador-persona" class="tab-content">
+            <div class="section">
+                <h2>🤝 Simula tu Ganancia (Venta en Persona)</h2>
+                <div class="alert alert-info">
+                    <span class="icon">💡</span>
+                    <div>
+                        <strong>Sin comisiones de plataforma:</strong> Ingresa el precio y mira tu ganancia neta (solo costo de impresión).
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Precio de Venta <span class="hint">(ARS)</span></label>
+                        <input type="number" id="precioPersonalizadoPersona" placeholder="18000" value="18000" min="0">
+                    </div>
+                </div>
+
+                <button onclick="simularPrecioPersona()">🚀 Simular</button>
+            </div>
+
+            <div id="resultadoSimulacionPersona" class="section" style="display: none;">
+                <h2>📊 Resultado</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💰 Tu Precio</span>
+                        <span class="result-value" id="tuPrecioPersona">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Costo Impresión</span>
+                        <span class="result-value warning" id="costoDeLaImpPersona">-$0.00</span>
+                    </div>
+                    <div class="result-row" style="border-top: 2px solid var(--primary); padding-top: 16px; margin-top: 16px;">
+                        <span class="result-label" style="font-weight: 700;">💵 TE QUEDA NETO</span>
+                        <span class="result-value highlight" id="teQuedaNetoPersona">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">📈 Margen</span>
+                        <span class="result-value" id="margenSimPersona">0%</span>
+                    </div>
+                </div>
+
+                <div id="alertaSimulacionPersona" class="alert" style="display: none;">
+                    <span class="icon" id="iconoAlertaPersona">⚠️</span>
+                    <span id="textoAlertaSimPersona"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: REGISTRO DE VENTAS -->
+        <div id="ventas" class="tab-content">
+            <div class="section">
+                <h2>📈 Estadísticas Generales</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Ventas</h3>
+                        <div class="value" id="totalVentas">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Ganancia Acumulada</h3>
+                        <div class="value" id="gananciaTotalVentas">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Margen Promedio</h3>
+                        <div class="value" id="margenPromedio">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Venta Promedio</h3>
+                        <div class="value" id="ventaPromedio">$0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>➕ Registrar Nueva Venta</h2>
+                <div class="alert alert-info">
+                    <span class="icon">💡</span>
+                    <div>
+                        <strong>Rápido y fácil:</strong> Ingresa los datos y la ganancia se calcula automáticamente.
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="nombreProductoVenta" placeholder="ej: Miniatura Casa">
+                    </div>
+                    <div class="form-group">
+                        <label>Precio de Venta (ARS)</label>
+                        <input type="number" id="precioVentaReg" placeholder="18000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>¿Dónde vendiste?</label>
+                        <select id="lugarVenta">
+                            <option value="ml">Mercado Libre</option>
+                            <option value="persona">Venta en Persona</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Venta</label>
+                        <input type="date" id="fechaVenta">
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Ganancia Neta (ARS) <span class="hint">Opcional - se calcula automáticamente</span></label>
+                        <input type="number" id="gananciaNetaReg" placeholder="Se calcula automáticamente">
+                    </div>
+                </div>
+                <button onclick="agregarVenta()">✅ Registrar Venta</button>
+            </div>
+
+            <div class="section">
+                <h2>📊 Historial de Ventas</h2>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="text" id="busquedaVentas" placeholder="🔍 Buscar por nombre..." onkeyup="filtrarVentas()">
+                </div>
+                
+                <table class="sales-table" id="tablaVentas">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Canal</th>
+                            <th>Precio Venta</th>
+                            <th>Ganancia Neta</th>
+                            <th>Margen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                    </tbody>
+                </table>
+
+                <div id="mensajeVacio" class="alert alert-info" style="margin-top: 20px;">
+                    <span class="icon">📝</span>
+                    <div>No hay ventas registradas aún. ¡Comienza a registrar tus ventas!</div>
+                </div>
+            </div>
+
+            <button onclick="exportarVentas()" class="btn-secondary" style="margin-top: 20px;">📥 Descargar Historial (CSV)</button>
+            <button onclick="limpiarHistorial()" class="btn-danger" style="margin-top: 20px;">🗑️ Limpiar Historial</button>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURACIÓN -->
+    <div id="modalConfig">
+        <div class="modal-content">
+            <h2>⚙️ Configuración</h2>
+            
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">🖨️ Tu Máquina</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Modelo de Máquina</label>
+                    <input type="text" id="modeloMaquina" placeholder="Bambu Lab A1 combo" value="Bambu Lab A1 combo">
+                </div>
+                <div class="form-group">
+                    <label>Consumo (Watts)</label>
+                    <input type="number" id="consumoWatts" placeholder="100" value="100" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Desgaste por hora (ARS)</label>
+                    <input type="number" id="desgasteHora" placeholder="200" value="200" min="0">
+                </div>
+            </div>
+
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">⚡ Energía</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tarifa kWh (ARS)</label>
+                    <input type="number" id="tarifaKwh" placeholder="384" value="384" min="0" step="0.01">
+                </div>
+            </div>
+
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">💾 Filamentos</h3>
+            <div id="listaFilamentos"></div>
+            <button onclick="abrirModalFilamento()" style="margin-top: 0;">➕ Agregar Filamento</button>
+
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">💾 Respaldo</h3>
+            <button onclick="guardarConfiguracion()">💾 Guardar Cambios</button>
+            <button onclick="exportarJSON()" class="btn-secondary">📤 Descargar Configuración</button>
+            <button onclick="document.getElementById('importJSON').click()" class="btn-secondary">📥 Importar Configuración</button>
+            <input type="file" id="importJSON" style="display: none;" accept=".json" onchange="importarJSON()">
+            <button onclick="resetearApp()" class="btn-danger">🔄 Resetear</button>
+
+            <button onclick="cerrarModalConfig()" class="btn-secondary" style="width: 100%; margin-top: 20px;">❌ Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL FILAMENTO -->
+    <div id="modalFilamento">
+        <div class="modal-content">
+            <h2>Nuevo Filamento</h2>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Tipo/Nombre</label>
+                <input type="text" id="nombreFilamento" placeholder="ej: PLA Rojo">
+            </div>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label>Precio por kg (ARS)</label>
+                <input type="number" id="precioFilamento" placeholder="23500" min="0">
+            </div>
+            <button onclick="guardarFilamento()" style="width: 100%; margin-bottom: 10px;">✅ Guardar</button>
+            <button onclick="cerrarModalFilamento()" class="btn-secondary" style="width: 100%;">❌ Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // VALORES POR DEFECTO Y ALMACENAMIENTO
+        // ============================================
+        const CONFIG_DEFAULT = {
+            modeloMaquina: 'Bambu Lab A1 combo',
+            consumoWatts: 100,
+            desgasteHora: 200,
+            mantenimientoMes: 3500,
+            tarifaKwh: 384,
+            filamentos: [
+                { nombre: 'PLA Estándar', precio: 23500 },
+                { nombre: 'PLA Silk', precio: 28600 }
+            ],
+            categoriaML: 11.62,
+            tipoEnvio: 'flex',
+            cuotas: 0
+        };
+
+        let config = CONFIG_DEFAULT;
+        let ventas = [];
+
+        // Cargar datos del localStorage
+        function cargarDatos() {
+            const configGuardada = localStorage.getItem('config3D');
+            const ventasGuardadas = localStorage.getItem('ventas3D');
+            
+            if (configGuardada) config = JSON.parse(configGuardada);
+            if (ventasGuardadas) ventas = JSON.parse(ventasGuardadas);
+            
+            actualizarUI();
+        }
+
+        // Guardar datos en localStorage
+        function guardarDatos() {
+            localStorage.setItem('config3D', JSON.stringify(config));
+            localStorage.setItem('ventas3D', JSON.stringify(ventas));
+            localStorage.setItem('ultimaActualizacion', new Date().toLocaleString());
+            mostrarNotificacion('✅ Datos guardados correctamente');
+        }
+
+        // ============================================
+        // NAVEGACIÓN TABS
+        // ============================================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                
+                document.getElementById(tabName).classList.add('active');
+                btn.classList.add('active');
+                
+                if (tabName === 'ventas') actualizarTablaVentas();
+            });
+        });
+
+        // ============================================
+        // TAB 1: CÁLCULO DE COSTOS
+        // ============================================
+        const preciosFilamentos = {
+            'pla': 23500,
+            'pla-silk': 28600
+        };
+
+        function calcularCostoImpresion() {
+            const tipoFilamento = document.getElementById('tipoFilamento').value;
+            const pesoProducto = parseFloat(document.getElementById('pesoProducto').value) || 0;
+            const eficiencia = parseFloat(document.getElementById('eficiencia').value) || 100;
+            const horasImpresion = parseFloat(document.getElementById('horasImpresion').value) || 0;
+
+            const precioFilamento = config.filamentos.find(f => {
+                if (tipoFilamento === 'pla') return f.nombre.includes('Estándar');
+                if (tipoFilamento === 'pla-silk') return f.nombre.includes('Silk');
+            })?.precio || preciosFilamentos[tipoFilamento];
+
+            // Cálculos
+            const pesoFilamentoNecesario = (pesoProducto / 1000) / (eficiencia / 100);
+            const costoFilamento = pesoFilamentoNecesario * precioFilamento;
+            const costoDesgaste = horasImpresion * config.desgasteHora;
+            const kwhConsumidos = (config.consumoWatts / 1000) * horasImpresion;
+            const costoElectricidad = kwhConsumidos * config.tarifaKwh;
+            const costoTotal = costoFilamento + costoDesgaste + costoElectricidad;
+
+            // Mostrar resultados
+            document.getElementById('costoTotal').textContent = `${costoTotal.toFixed(2)}`;
+
+            return costoTotal;
+        }
+
+        // Event listeners para cálculo automático
+        ['tipoFilamento', 'pesoProducto', 'eficiencia', 'horasImpresion'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                calcularCostoImpresion();
+                actualizarPrecioML();
+                simularPrecioML();
+                simularPrecioPersona();
+            });
+        });
+
+        function copiarCosto() {
+            const costo = document.getElementById('costoTotal').textContent;
+            navigator.clipboard.writeText(costo.replace('
