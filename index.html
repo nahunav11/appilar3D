@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appilar 3D - Calculadora de Costos</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23D4A574'>⚙️</text></svg>">
+    <title>Calculadora 3D Pro - Impresión & Venta ML</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🖨️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,453 +13,756 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #a89968;
+            --primary-dark: #8b7355;
+            --primary-light: #c9b8a8;
+            --bg-primary: #faf6f1;
+            --bg-secondary: #fef9f3;
+            --bg-tertiary: #f5ede4;
+            --text-primary: #2d2d2d;
+            --text-secondary: #6b6b6b;
+            --border: #e8ddd0;
+            --success: #7cb342;
+            --warning: #d4a574;
+            --danger: #c17c7c;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #FAF8F3 0%, #F5F1EA 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #faf6f1 0%, #f5ede4 100%);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
-            color: #2c2c2c;
+            padding: 24px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
         }
 
+        /* HEADER */
         header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px 0;
-        }
-
-        .logo {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 36px;
-            color: #2c2c2c;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: #7a7a7a;
-            font-size: 16px;
-            margin-top: 8px;
-        }
-
-        .tabs {
             display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e8e3db;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+            padding: 20px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: 1em;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--primary-dark);
+            cursor: pointer;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
             justify-content: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(168, 153, 104, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .settings-btn:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .settings-btn:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* TABS */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-sm);
         }
 
         .tab-btn {
-            padding: 12px 24px;
-            background: none;
+            padding: 10px 20px;
             border: none;
-            font-size: 16px;
-            font-weight: 500;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
             cursor: pointer;
-            color: #999;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: var(--transition);
             position: relative;
-            bottom: -2px;
+            overflow: hidden;
         }
 
-        .tab-btn.active {
-            color: #2c2c2c;
-            border-bottom-color: #D4A574;
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            z-index: -1;
+            transition: var(--transition);
         }
 
         .tab-btn:hover {
-            color: #555;
+            color: var(--primary-dark);
+            transform: translateY(-2px);
         }
 
+        .tab-btn:hover::before {
+            left: 0;
+            opacity: 0.1;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(168, 153, 104, 0.3);
+        }
+
+        .tab-btn.active::before {
+            left: 0;
+        }
+
+        /* TAB CONTENT */
         .tab-content {
             display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 30px;
+        /* SECTION */
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f0ebe3;
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(168, 153, 104, 0.3), transparent);
         }
 
-        .card h2 {
-            font-size: 16px;
-            color: #2c2c2c;
-            margin-bottom: 20px;
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(168, 153, 104, 0.3);
+        }
+
+        .section h2 {
+            font-size: 1.4em;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            color: var(--primary-dark);
+        }
+
+        .section h2::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 24px;
+            background: linear-gradient(180deg, var(--primary), rgba(168, 153, 104, 0.3));
+            border-radius: 2px;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
         }
 
         label {
-            display: block;
-            font-size: 13px;
-            color: #666;
+            font-size: 0.85em;
+            color: var(--text-primary);
             margin-bottom: 8px;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        input[type="number"],
-        input[type="text"],
-        select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e8e3db;
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
-            transition: all 0.2s ease;
-        }
-
-        input[type="number"]:focus,
-        input[type="text"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #D4A574;
-            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
-        }
-
-        .info-text {
-            font-size: 13px;
-            color: #999;
-            margin-top: 6px;
-        }
-
-        .result-box {
-            background: linear-gradient(135deg, #FAF8F3 0%, #F5F1EA 100%);
-            border: 1px solid #e8e3db;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .result-label {
-            font-size: 12px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-bottom: 8px;
-        }
-
-        .result-value {
-            font-size: 28px;
-            color: #2c2c2c;
-            font-weight: 700;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
-        .price-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .price-option {
-            padding: 16px;
-            background: white;
-            border: 2px solid #e8e3db;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .price-option.selected {
-            border-color: #D4A574;
-            background: linear-gradient(135deg, #FAF8F3 0%, #F5F1EA 100%);
-        }
-
-        .price-option:hover {
-            border-color: #D4A574;
-        }
-
-        .price-option-label {
-            font-size: 12px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-bottom: 6px;
-        }
-
-        .price-option-margin {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .price-option-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c2c2c;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .btn-primary {
-            background: #2c2c2c;
-            color: white;
-            flex: 1;
-            min-width: 150px;
+        label .hint {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-transform: none;
+            margin-left: 4px;
         }
 
-        .btn-primary:hover {
-            background: #1a1a1a;
+        input, select {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(250,246,241,0.5) 100%);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(168, 153, 104, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: var(--primary-light);
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            background: linear-gradient(135deg, rgba(168, 153, 104, 0.08) 0%, rgba(217, 200, 170, 0.08) 100%);
+            border: 1px solid rgba(168, 153, 104, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(168, 153, 104, 0.1);
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-value.highlight {
+            color: var(--success);
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .result-value.warning {
+            color: var(--warning);
+        }
+
+        .result-value.danger {
+            color: var(--danger);
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 12px 24px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            font-family: inherit;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(168, 153, 104, 0.35);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-secondary {
-            background: #e8e3db;
-            color: #2c2c2c;
-            flex: 1;
-            min-width: 150px;
+            background: linear-gradient(135deg, white 0%, var(--bg-tertiary) 100%);
+            border: 1.5px solid var(--border);
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-secondary:hover {
-            background: #ddd4c8;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
-        .config-icon {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: #2c2c2c;
-            border-radius: 50%;
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #a85454 100%);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 20px rgba(193, 124, 124, 0.35);
+        }
+
+        /* TABLE */
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        .sales-table th {
+            background: linear-gradient(135deg, rgba(168, 153, 104, 0.15) 0%, rgba(217, 200, 170, 0.15) 100%);
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--primary);
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sales-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95em;
+        }
+
+        .sales-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .sales-table tbody tr:hover {
+            background: rgba(168, 153, 104, 0.08);
+            transform: translateX(2px);
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(168, 153, 104, 0.12) 0%, rgba(217, 200, 170, 0.12) 100%);
+            border: 1px solid rgba(168, 153, 104, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(168, 153, 104, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(168, 153, 104, 0.15);
+            border-color: var(--primary);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card h3 {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+        }
+
+        .stat-card .value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary);
+            position: relative;
+            z-index: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            z-index: 100;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1px solid;
+            animation: slideUp 0.3s ease-out;
         }
 
-        .config-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .modal {
-            display: none;
+        .alert-info {
+            background: rgba(168, 153, 104, 0.08);
+            border-color: var(--primary);
+            color: var(--text-secondary);
+        }
+
+        .alert-warning {
+            background: rgba(212, 165, 116, 0.08);
+            border-color: var(--warning);
+            color: var(--text-secondary);
+        }
+
+        .alert-success {
+            background: rgba(124, 179, 66, 0.08);
+            border-color: var(--success);
+            color: var(--text-secondary);
+        }
+
+        .alert .icon {
+            font-size: 1.3em;
+            min-width: 24px;
+            margin-top: 2px;
+        }
+
+        /* TOOLTIP */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 10;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--text-primary);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .tooltip:hover::after,
+        .tooltip:hover::before {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* MODAL */
+        #modalFilamento, #modalConfig {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 200;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            padding: 20px;
+            display: none;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 16px;
             padding: 40px;
-            max-width: 600px;
+            max-width: 500px;
             width: 100%;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        .modal-header {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 30px;
-            color: #2c2c2c;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .modal-content h2 {
+            color: var(--primary-dark);
+            margin-bottom: 24px;
+            font-size: 1.5em;
         }
 
-        .modal-section {
-            margin-bottom: 30px;
-        }
-
-        .modal-section h3 {
-            font-size: 13px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #999;
-            transition: color 0.2s ease;
-        }
-
-        .close-modal:hover {
-            color: #2c2c2c;
-        }
-
-        .history-item {
-            background: #fafaf8;
-            border: 1px solid #e8e3db;
+        /* NOTIFICATIONS */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px 24px;
             border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .history-item-info {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .history-item-name {
             font-weight: 600;
-            color: #2c2c2c;
-            margin-bottom: 4px;
+            z-index: 2000;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 32px rgba(168, 153, 104, 0.3);
+            letter-spacing: 0.3px;
         }
 
-        .history-item-details {
-            font-size: 12px;
-            color: #999;
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        .history-item-price {
-            font-weight: 700;
-            font-size: 16px;
-            color: #2c2c2c;
-            font-family: 'Monaco', 'Courier New', monospace;
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(400px);
+            }
         }
 
-        .history-actions {
-            display: flex;
-            gap: 8px;
+        /* SCROLL */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .btn-small {
-            padding: 8px 12px;
-            font-size: 12px;
-            background: #e8e3db;
-            color: #2c2c2c;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
         }
 
-        .btn-small:hover {
-            background: #ddd4c8;
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
         }
 
-        .btn-small.delete {
-            background: #ffebee;
-            color: #c62828;
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
         }
 
-        .btn-small.delete:hover {
-            background: #ffcdd2;
-        }
-
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .grid {
+            header {
+                flex-direction: column;
+                text-align: center;
+                margin-bottom: 32px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .header-right {
+                margin-top: 16px;
+                justify-content: center;
+            }
+
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .config-icon {
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
+            .section {
+                padding: 20px;
             }
 
-            h1 {
-                font-size: 28px;
-            }
-
-            .modal-content {
-                padding: 30px 20px;
-            }
-
-            .tabs {
-                gap: 8px;
+            .tabs-wrapper {
+                flex-direction: column;
             }
 
             .tab-btn {
-                padding: 10px 16px;
-                font-size: 14px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .modal-content {
+                padding: 24px;
             }
         }
     </style>
@@ -466,519 +770,979 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">🖨️</div>
-            <h1>Appilar 3D</h1>
-            <p class="subtitle">Calculadora profesional de costos de impresión</p>
+            <div class="header-left">
+                <h1>🖨️ Calculadora 3D Pro</h1>
+                <p>Impresión 3D + Mercado Libre</p>
+            </div>
+            <div class="header-right">
+                <button class="settings-btn" onclick="abrirModalConfig()" title="Configuración">⚙️</button>
+            </div>
         </header>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('calculator')">Calculadora</button>
-            <button class="tab-btn" onclick="switchTab('sales')">Vendedor Personal</button>
-            <button class="tab-btn" onclick="switchTab('history')">Historial</button>
+        <div class="tabs-wrapper">
+            <button class="tab-btn active" data-tab="costo-impresion">💰 Costo</button>
+            <button class="tab-btn" data-tab="precio-ml">🛒 Precio ML</button>
+            <button class="tab-btn" data-tab="simulador-ml">📊 Simulador ML</button>
+            <button class="tab-btn" data-tab="simulador-persona">🤝 Venta Personal</button>
+            <button class="tab-btn" data-tab="ventas">📈 Ventas</button>
         </div>
 
-        <!-- TAB: CALCULADORA -->
-        <div id="calculator" class="tab-content active">
-            <div class="grid">
-                <!-- Card: Configuración de Filamento -->
-                <div class="card">
-                    <h2>📋 Filamento</h2>
+        <!-- TAB 1: COSTO DE IMPRESIÓN -->
+        <div id="costo-impresion" class="tab-content active">
+            <div class="section">
+                <h2>🎨 Calcula el Costo de tu Impresión</h2>
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Tipo de Filamento</label>
-                        <select id="filamentType" onchange="updateFilamentPrice()">
-                            <option value="pla-standard">PLA Estándar</option>
-                            <option value="pla-silk">PLA Silk</option>
+                        <select id="tipoFilamento">
+                            <option value="pla">PLA Estándar - $23.500/kg</option>
+                            <option value="pla-silk">PLA Silk - $28.600/kg</option>
                         </select>
-                        <p class="info-text">Precio por kilo</p>
                     </div>
                     <div class="form-group">
-                        <label>Peso Estimado (gramos)</label>
-                        <input type="number" id="weight" value="100" min="1" oninput="calculateCosts()">
-                        <p class="info-text">Peso del modelo</p>
+                        <label>Peso del producto <span class="hint">(gramos)</span></label>
+                        <input type="number" id="pesoProducto" placeholder="190" value="190" min="1">
                     </div>
                     <div class="form-group">
-                        <label>Eficiencia de Impresión (%)</label>
-                        <input type="number" id="efficiency" value="95" min="1" max="100" oninput="calculateCosts()">
-                        <p class="info-text">Porcentaje de aprovechamiento</p>
+                        <label>Eficiencia de impresión <span class="hint">(%)</span></label>
+                        <input type="number" id="eficiencia" placeholder="95" value="95" min="50" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Tiempo de impresión <span class="hint">(horas)</span></label>
+                        <input type="number" id="horasImpresion" placeholder="3" value="3" min="0.1" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚡ Costo Total</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💰 COSTO TOTAL</span>
+                        <span class="result-value highlight" id="costoTotal">$0.00</span>
                     </div>
                 </div>
 
-                <!-- Card: Tiempo de Impresión -->
-                <div class="card">
-                    <h2>⏱️ Tiempo de Impresión</h2>
-                    <div class="form-group">
-                        <label>Horas</label>
-                        <input type="number" id="hours" value="0" min="0" oninput="calculateCosts()">
-                    </div>
-                    <div class="form-group">
-                        <label>Minutos</label>
-                        <input type="number" id="minutes" value="30" min="0" max="59" oninput="calculateCosts()">
-                    </div>
-                    <div class="result-box">
-                        <div class="result-label">Tiempo Total</div>
-                        <div class="result-value" id="displayTime">0:30</div>
+                <div class="alert alert-info">
+                    <span class="icon">ℹ️</span>
+                    <div>
+                        <strong>Este es tu costo mínimo.</strong> No vendas por menos de esto.
                     </div>
                 </div>
 
-                <!-- Card: Costos -->
-                <div class="card">
-                    <h2>💰 Desglose de Costos</h2>
-                    <div class="result-box">
-                        <div class="result-label">Filamento</div>
-                        <div class="result-value" id="filamentCost">$0</div>
-                    </div>
-                    <div class="result-box">
-                        <div class="result-label">Energía Eléctrica</div>
-                        <div class="result-value" id="energyCost">$0</div>
-                    </div>
-                    <div class="result-box">
-                        <div class="result-label">Desgaste de Máquina</div>
-                        <div class="result-value" id="wearCost">$0</div>
-                    </div>
-                    <div class="result-box" style="background: linear-gradient(135deg, #FFF8E1 0%, #FFF3CD 100%); border-color: #FFE082;">
-                        <div class="result-label">COSTO TOTAL DE PRODUCCIÓN</div>
-                        <div class="result-value" id="totalCost">$0</div>
-                    </div>
-                </div>
+                <button onclick="copiarCosto()">📋 Copiar Costo</button>
+            </div>
+        </div>
 
-                <!-- Card: Márgenes Personalizados -->
-                <div class="card">
-                    <h2>📊 Márgenes de Ganancia</h2>
-                    <p class="info-text" style="margin-bottom: 16px;">Selecciona el modelo de ganancia:</p>
-                    <div class="price-options">
-                        <div class="price-option selected" onclick="selectMargin(40)">
-                            <div class="price-option-label">Estándar</div>
-                            <div class="price-option-margin">+40%</div>
-                            <div class="price-option-value" id="margin-40">$0</div>
-                        </div>
-                        <div class="price-option" onclick="selectMargin(70)">
-                            <div class="price-option-label">Minorista</div>
-                            <div class="price-option-margin">+70%</div>
-                            <div class="price-option-value" id="margin-70">$0</div>
-                        </div>
-                        <div class="price-option" onclick="selectMargin(120)">
-                            <div class="price-option-label">Mayorista</div>
-                            <div class="price-option-margin">+120%</div>
-                            <div class="price-option-value" id="margin-120">$0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card: Precio Mercado Libre -->
-                <div class="card">
-                    <h2>🛒 Mercado Libre</h2>
+        <!-- TAB 2: PRECIO MERCADO LIBRE -->
+        <div id="precio-ml" class="tab-content">
+            <div class="section">
+                <h2>🛒 Configuración Mercado Libre</h2>
+                <div class="form-grid">
                     <div class="form-group">
-                        <label>Comisión ML (%)</label>
-                        <input type="number" id="mlCommission" value="15.5" step="0.01" oninput="calculateCosts()">
-                        <p class="info-text">Porcentaje de comisión</p>
+                        <label>Categoría ML <span class="hint tooltip" data-tip="Afecta comisión">?</span></label>
+                        <select id="categoriaML">
+                            <option value="11.62">Hogar (11.62%)</option>
+                            <option value="14.5">Accesorios (14.5%)</option>
+                            <option value="17.75">Otros (17.75%)</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Costo de Envío ($)</label>
-                        <input type="number" id="shippingCost" value="0" min="0" oninput="calculateCosts()">
-                        <p class="info-text">Costo a descontar</p>
+                        <label>¿Ofrecerás cuotas?</label>
+                        <select id="cuotas">
+                            <option value="0">No</option>
+                            <option value="5">3-12 cuotas (5%)</option>
+                            <option value="8.40">3 cuotas sin interés (8.40%)</option>
+                            <option value="12.30">6 cuotas (12.30%)</option>
+                            <option value="15.70">9 cuotas (15.70%)</option>
+                            <option value="19.20">12 cuotas (19.20%)</option>
+                        </select>
                     </div>
-                    <div class="result-box" style="background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%); border-color: #CE93D8;">
-                        <div class="result-label">Precio de Venta ML</div>
-                        <div class="result-value" id="mlPrice">$0</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Precio Recomendado para ML</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💵 Costo de Impresión</span>
+                        <span class="result-value" id="costoImpresionML">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">🎫 Comisión ML (%)</span>
+                        <span class="result-value" id="comisionML">0%</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">🎁 Costo Cuotas</span>
+                        <span class="result-value" id="costoCuotasML">$0.00</span>
+                    </div>
+                    <div class="result-row" style="border-top: 2px solid var(--primary); padding-top: 16px; margin-top: 16px;">
+                        <span class="result-label" style="font-weight: 700;">💰 GANANCIA NETA</span>
+                        <span class="result-value highlight" id="gananciaNeta">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">📊 Margen (%)</span>
+                        <span class="result-value" id="margenPorcentaje">0%</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">💳 PRECIO A PUBLICAR</span>
+                        <span class="result-value" id="precioVentaML">$0.00</span>
                     </div>
                 </div>
 
-                <!-- Card: Registro de Ventas -->
-                <div class="card">
-                    <h2>📝 Registrar Venta</h2>
+                <div id="alertaML" class="alert alert-warning" style="display: none;">
+                    <span class="icon">⚠️</span>
+                    <span id="textoAlerta"></span>
+                </div>
+
+                <button onclick="calcularPrecioML()">🔄 Calcular</button>
+                <button onclick="copiarPrecioML()" class="btn-secondary">📋 Copiar Precio</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: SIMULADOR ML -->
+        <div id="simulador-ml" class="tab-content">
+            <div class="section">
+                <h2>🎯 Simula tu Ganancia en ML</h2>
+                <div class="alert alert-info">
+                    <span class="icon">💡</span>
+                    <div>
+                        <strong>Prueba precios:</strong> Ingresa el precio que quieras vender y mira exactamente cuánto te queda después de costos y comisiones.
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Precio de Venta en ML <span class="hint">(ARS)</span></label>
+                        <input type="number" id="precioPersonalizadoML" placeholder="18000" value="18000" min="0">
+                    </div>
+                </div>
+
+                <button onclick="simularPrecioML()">🚀 Simular</button>
+            </div>
+
+            <div id="resultadoSimulacionML" class="section" style="display: none;">
+                <h2>📊 Resultado</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💰 Tu Precio</span>
+                        <span class="result-value" id="tuPrecioML">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Costo Impresión</span>
+                        <span class="result-value warning" id="costoDeLaImpML">-$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Comisión ML</span>
+                        <span class="result-value warning" id="comisionDeMLa">-$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Costo Cuotas</span>
+                        <span class="result-value warning" id="cuotasDeMLa">-$0.00</span>
+                    </div>
+                    <div class="result-row" style="border-top: 2px solid var(--primary); padding-top: 16px; margin-top: 16px;">
+                        <span class="result-label" style="font-weight: 700;">💵 TE QUEDA NETO</span>
+                        <span class="result-value highlight" id="teQuedaNetoML">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">📈 Margen</span>
+                        <span class="result-value" id="margenSimML">0%</span>
+                    </div>
+                </div>
+
+                <div id="alertaSimulacionML" class="alert" style="display: none;">
+                    <span class="icon" id="iconoAlertaML">⚠️</span>
+                    <span id="textoAlertaSimML"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: SIMULADOR EN PERSONA -->
+        <div id="simulador-persona" class="tab-content">
+            <div class="section">
+                <h2>🤝 Simula tu Ganancia (Venta en Persona)</h2>
+                <div class="alert alert-info">
+                    <span class="icon">💡</span>
+                    <div>
+                        <strong>Sin comisiones de plataforma:</strong> Ingresa el precio y mira tu ganancia neta (solo costo de impresión).
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Precio de Venta <span class="hint">(ARS)</span></label>
+                        <input type="number" id="precioPersonalizadoPersona" placeholder="18000" value="18000" min="0">
+                    </div>
+                </div>
+
+                <button onclick="simularPrecioPersona()">🚀 Simular</button>
+            </div>
+
+            <div id="resultadoSimulacionPersona" class="section" style="display: none;">
+                <h2>📊 Resultado</h2>
+                <div class="result-box">
+                    <div class="result-row">
+                        <span class="result-label">💰 Tu Precio</span>
+                        <span class="result-value" id="tuPrecioPersona">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">➖ Costo Impresión</span>
+                        <span class="result-value warning" id="costoDeLaImpPersona">-$0.00</span>
+                    </div>
+                    <div class="result-row" style="border-top: 2px solid var(--primary); padding-top: 16px; margin-top: 16px;">
+                        <span class="result-label" style="font-weight: 700;">💵 TE QUEDA NETO</span>
+                        <span class="result-value highlight" id="teQuedaNetoPersona">$0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">📈 Margen</span>
+                        <span class="result-value" id="margenSimPersona">0%</span>
+                    </div>
+                </div>
+
+                <div id="alertaSimulacionPersona" class="alert" style="display: none;">
+                    <span class="icon" id="iconoAlertaPersona">⚠️</span>
+                    <span id="textoAlertaSimPersona"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: REGISTRO DE VENTAS -->
+        <div id="ventas" class="tab-content">
+            <div class="section">
+                <h2>📈 Estadísticas Generales</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Ventas</h3>
+                        <div class="value" id="totalVentas">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Ganancia Acumulada</h3>
+                        <div class="value" id="gananciaTotalVentas">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Margen Promedio</h3>
+                        <div class="value" id="margenPromedio">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Venta Promedio</h3>
+                        <div class="value" id="ventaPromedio">$0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>➕ Registrar Nueva Venta</h2>
+                <div class="alert alert-info">
+                    <span class="icon">💡</span>
+                    <div>
+                        <strong>Rápido y fácil:</strong> Ingresa los datos y la ganancia se calcula automáticamente.
+                    </div>
+                </div>
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Nombre del Producto</label>
-                        <input type="text" id="productName" placeholder="Ej: Maceta Moderna">
+                        <input type="text" id="nombreProductoVenta" placeholder="ej: Miniatura Casa">
                     </div>
                     <div class="form-group">
-                        <label>Precio Final ($)</label>
-                        <input type="number" id="finalPrice" value="0" min="0">
+                        <label>Precio de Venta (ARS)</label>
+                        <input type="number" id="precioVentaReg" placeholder="18000" min="0">
                     </div>
-                    <div class="button-group">
-                        <button class="btn-primary" onclick="saveToHistory()">Guardar Venta</button>
-                        <button class="btn-secondary" onclick="clearCalculator()">Limpiar</button>
+                    <div class="form-group">
+                        <label>¿Dónde vendiste?</label>
+                        <select id="lugarVenta">
+                            <option value="ml">Mercado Libre</option>
+                            <option value="persona">Venta en Persona</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Venta</label>
+                        <input type="date" id="fechaVenta">
                     </div>
                 </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Ganancia Neta (ARS) <span class="hint">Opcional - se calcula automáticamente</span></label>
+                        <input type="number" id="gananciaNetaReg" placeholder="Se calcula automáticamente">
+                    </div>
+                </div>
+                <button onclick="agregarVenta()">✅ Registrar Venta</button>
             </div>
-        </div>
 
-        <!-- TAB: VENDEDOR PERSONAL -->
-        <div id="sales" class="tab-content">
-            <div class="grid">
-                <div class="card">
-                    <h2>💸 Simulador de Ganancias (Venta Personal)</h2>
-                    <div class="form-group">
-                        <label>Costo Total de Producción ($)</label>
-                        <input type="number" id="personCost" value="0" min="0" oninput="calculatePersonalSales()">
-                    </div>
-                    <div class="form-group">
-                        <label>Ganancia Deseada (%)</label>
-                        <input type="number" id="personMargin" value="40" min="0" max="500" oninput="calculatePersonalSales()">
-                    </div>
-                    <div class="result-box">
-                        <div class="result-label">Precio de Venta</div>
-                        <div class="result-value" id="personPrice">$0</div>
-                    </div>
-                    <div class="result-box">
-                        <div class="result-label">Ganancia Neta</div>
-                        <div class="result-value" id="personProfit">$0</div>
-                    </div>
-                    <div class="button-group">
-                        <button class="btn-primary" onclick="savePersonalSale()">Registrar Venta</button>
-                    </div>
+            <div class="section">
+                <h2>📊 Historial de Ventas</h2>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="text" id="busquedaVentas" placeholder="🔍 Buscar por nombre..." onkeyup="filtrarVentas()">
                 </div>
-            </div>
-        </div>
+                
+                <table class="sales-table" id="tablaVentas">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Canal</th>
+                            <th>Precio Venta</th>
+                            <th>Ganancia Neta</th>
+                            <th>Margen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                    </tbody>
+                </table>
 
-        <!-- TAB: HISTORIAL -->
-        <div id="history" class="tab-content">
-            <div class="card">
-                <h2>📚 Historial de Ventas</h2>
-                <div id="historyList">
-                    <p style="text-align: center; color: #999;">No hay ventas registradas aún</p>
+                <div id="mensajeVacio" class="alert alert-info" style="margin-top: 20px;">
+                    <span class="icon">📝</span>
+                    <div>No hay ventas registradas aún. ¡Comienza a registrar tus ventas!</div>
                 </div>
             </div>
+
+            <button onclick="exportarVentas()" class="btn-secondary" style="margin-top: 20px;">📥 Descargar Historial (CSV)</button>
+            <button onclick="limpiarHistorial()" class="btn-danger" style="margin-top: 20px;">🗑️ Limpiar Historial</button>
         </div>
     </div>
 
-    <!-- CONFIGURACIÓN -->
-    <div class="config-icon" onclick="openConfig()">⚙️</div>
-
-    <div id="configModal" class="modal">
+    <!-- MODAL CONFIGURACIÓN -->
+    <div id="modalConfig">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeConfig()">&times;</button>
-            <div class="modal-header">⚙️ Configuración</div>
-
-            <div class="modal-section">
-                <h3>Precios de Filamento</h3>
+            <h2>⚙️ Configuración</h2>
+            
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">🖨️ Tu Máquina</h3>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label>PLA Estándar (por kilo)</label>
-                    <input type="number" id="configPLAStandard" value="23500" oninput="updateConfigFilaments()">
+                    <label>Modelo de Máquina</label>
+                    <input type="text" id="modeloMaquina" placeholder="Bambu Lab A1 combo" value="Bambu Lab A1 combo">
                 </div>
                 <div class="form-group">
-                    <label>PLA Silk (por kilo)</label>
-                    <input type="number" id="configPLASilk" value="28600" oninput="updateConfigFilaments()">
-                </div>
-            </div>
-
-            <div class="modal-section">
-                <h3>Costos de Máquina</h3>
-                <div class="form-group">
-                    <label>Desgaste por Hora ($)</label>
-                    <input type="number" id="configWear" value="200" oninput="saveConfig()">
+                    <label>Consumo (Watts)</label>
+                    <input type="number" id="consumoWatts" placeholder="100" value="100" min="1">
                 </div>
                 <div class="form-group">
-                    <label>Mantenimiento Mensual ($)</label>
-                    <input type="number" id="configMaintenance" value="3500" oninput="saveConfig()">
-                </div>
-                <div class="form-group">
-                    <label>Consumo Promedio (W)</label>
-                    <input type="number" id="configPower" value="100" oninput="saveConfig()">
+                    <label>Desgaste por hora (ARS)</label>
+                    <input type="number" id="desgasteHora" placeholder="200" value="200" min="0">
                 </div>
             </div>
 
-            <div class="modal-section">
-                <h3>Costos de Energía</h3>
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">⚡ Energía</h3>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label>Tarifa Eléctrica ($/kWh)</label>
-                    <input type="number" id="configEnergy" value="384" step="0.01" oninput="saveConfig()">
+                    <label>Tarifa kWh (ARS)</label>
+                    <input type="number" id="tarifaKwh" placeholder="384" value="384" min="0" step="0.01">
                 </div>
             </div>
 
-            <div class="button-group">
-                <button class="btn-primary" onclick="resetConfig()">Restaurar Valores</button>
-                <button class="btn-secondary" onclick="closeConfig()">Cerrar</button>
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">💾 Filamentos</h3>
+            <div id="listaFilamentos"></div>
+            <button onclick="abrirModalFilamento()" style="margin-top: 0;">➕ Agregar Filamento</button>
+
+            <h3 style="margin-top: 24px; margin-bottom: 16px; color: var(--primary-dark); font-size: 1.1em;">💾 Respaldo</h3>
+            <button onclick="guardarConfiguracion()">💾 Guardar Cambios</button>
+            <button onclick="exportarJSON()" class="btn-secondary">📤 Descargar Configuración</button>
+            <button onclick="document.getElementById('importJSON').click()" class="btn-secondary">📥 Importar Configuración</button>
+            <input type="file" id="importJSON" style="display: none;" accept=".json" onchange="importarJSON()">
+            <button onclick="resetearApp()" class="btn-danger">🔄 Resetear</button>
+
+            <button onclick="cerrarModalConfig()" class="btn-secondary" style="width: 100%; margin-top: 20px;">❌ Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL FILAMENTO -->
+    <div id="modalFilamento">
+        <div class="modal-content">
+            <h2>Nuevo Filamento</h2>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Tipo/Nombre</label>
+                <input type="text" id="nombreFilamento" placeholder="ej: PLA Rojo">
             </div>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label>Precio por kg (ARS)</label>
+                <input type="number" id="precioFilamento" placeholder="23500" min="0">
+            </div>
+            <button onclick="guardarFilamento()" style="width: 100%; margin-bottom: 10px;">✅ Guardar</button>
+            <button onclick="cerrarModalFilamento()" class="btn-secondary" style="width: 100%;">❌ Cancelar</button>
         </div>
     </div>
 
     <script>
-        // CONFIG DEFAULT
-        const defaultConfig = {
-            plaStandard: 23500,
-            plaSilk: 28600,
-            wearPerHour: 200,
-            monthlyMaintenance: 3500,
-            powerConsumption: 100,
-            energyRate: 384
+        // ============================================
+        // VALORES POR DEFECTO Y ALMACENAMIENTO
+        // ============================================
+        const CONFIG_DEFAULT = {
+            modeloMaquina: 'Bambu Lab A1 combo',
+            consumoWatts: 100,
+            desgasteHora: 200,
+            mantenimientoMes: 3500,
+            tarifaKwh: 384,
+            filamentos: [
+                { nombre: 'PLA Estándar', precio: 23500 },
+                { nombre: 'PLA Silk', precio: 28600 }
+            ],
+            categoriaML: 11.62,
+            tipoEnvio: 'flex',
+            cuotas: 0
         };
 
-        let config = { ...defaultConfig };
-        let selectedMargin = 40;
-        let history = [];
-        let currentTotalCost = 0;
+        let config = CONFIG_DEFAULT;
+        let ventas = [];
 
-        // CARGAR CONFIG AL INICIAR
-        function loadConfig() {
-            const saved = localStorage.getItem('appilar3dConfig');
-            if (saved) {
-                config = JSON.parse(saved);
-                updateConfigInputs();
+        // Función para formatear números
+        function formatearNumero(num) {
+            return num.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Cargar datos del localStorage
+        function cargarDatos() {
+            const configGuardada = localStorage.getItem('config3D');
+            const ventasGuardadas = localStorage.getItem('ventas3D');
+            
+            if (configGuardada) config = JSON.parse(configGuardada);
+            if (ventasGuardadas) ventas = JSON.parse(ventasGuardadas);
+            
+            actualizarUI();
+        }
+
+        // Guardar datos en localStorage
+        function guardarDatos() {
+            localStorage.setItem('config3D', JSON.stringify(config));
+            localStorage.setItem('ventas3D', JSON.stringify(ventas));
+            localStorage.setItem('ultimaActualizacion', new Date().toLocaleString());
+            mostrarNotificacion('✅ Datos guardados correctamente');
+        }
+
+        // ============================================
+        // NAVEGACIÓN TABS
+        // ============================================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                
+                document.getElementById(tabName).classList.add('active');
+                btn.classList.add('active');
+                
+                if (tabName === 'ventas') actualizarTablaVentas();
+            });
+        });
+
+        // ============================================
+        // TAB 1: CÁLCULO DE COSTOS
+        // ============================================
+        const preciosFilamentos = {
+            'pla': 23500,
+            'pla-silk': 28600
+        };
+
+        function calcularCostoImpresion() {
+            const tipoFilamento = document.getElementById('tipoFilamento').value;
+            const pesoProducto = parseFloat(document.getElementById('pesoProducto').value) || 0;
+            const eficiencia = parseFloat(document.getElementById('eficiencia').value) || 100;
+            const horasImpresion = parseFloat(document.getElementById('horasImpresion').value) || 0;
+
+            const precioFilamento = config.filamentos.find(f => {
+                if (tipoFilamento === 'pla') return f.nombre.includes('Estándar');
+                if (tipoFilamento === 'pla-silk') return f.nombre.includes('Silk');
+            })?.precio || preciosFilamentos[tipoFilamento];
+
+            // Cálculos
+            const pesoFilamentoNecesario = (pesoProducto / 1000) / (eficiencia / 100);
+            const costoFilamento = pesoFilamentoNecesario * precioFilamento;
+            const costoDesgaste = horasImpresion * config.desgasteHora;
+            const kwhConsumidos = (config.consumoWatts / 1000) * horasImpresion;
+            const costoElectricidad = kwhConsumidos * config.tarifaKwh;
+            const costoTotal = costoFilamento + costoDesgaste + costoElectricidad;
+
+            // Mostrar resultados
+            document.getElementById('costoTotal').textContent = `$${formatearNumero(costoTotal)}`;
+
+            return costoTotal;
+        }
+
+        // Event listeners para cálculo automático
+        ['tipoFilamento', 'pesoProducto', 'eficiencia', 'horasImpresion'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                calcularCostoImpresion();
+                actualizarPrecioML();
+                simularPrecioML();
+                simularPrecioPersona();
+            });
+        });
+
+        function copiarCosto() {
+            const costo = document.getElementById('costoTotal').textContent;
+            navigator.clipboard.writeText(costo.replace('$', ''));
+            mostrarNotificacion('📋 Costo copiado al portapapeles');
+        }
+
+        // ============================================
+        // TAB 2: PRECIO MERCADO LIBRE
+        // ============================================
+        function calcularPrecioML() {
+            const costoTotal = calcularCostoImpresion();
+            const comisionML = parseFloat(document.getElementById('categoriaML').value);
+            const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+
+            const porcentajeTotal = (comisionML + costosCuotas) / 100;
+            let precioRecomendado = costoTotal / (1 - porcentajeTotal);
+
+            const precioFinal = Math.round(precioRecomendado / 100) * 100 - 1;
+
+            document.getElementById('precioVentaML').textContent = `$${formatearNumero(precioFinal)}`;
+            actualizarAnalisisML(precioFinal);
+        }
+
+        function actualizarAnalisisML(precioVenta) {
+            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.'));
+            const comisionML = parseFloat(document.getElementById('categoriaML').value);
+            const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+
+            const comisionEnARS = precioVenta * (comisionML / 100);
+            const costoCuotasARS = precioVenta * (costosCuotas / 100);
+            const gananciaNeta = precioVenta - costoTotal - comisionEnARS - costoCuotasARS;
+            const margen = ((gananciaNeta / precioVenta) * 100).toFixed(2);
+
+            document.getElementById('costoImpresionML').textContent = `$${formatearNumero(costoTotal)}`;
+            document.getElementById('comisionML').textContent = `${margen < 0 ? '0' : comisionML.toFixed(2)}%`;
+            document.getElementById('costoCuotasML').textContent = `$${formatearNumero(costoCuotasARS)}`;
+            document.getElementById('gananciaNeta').textContent = `$${formatearNumero(gananciaNeta)}`;
+            document.getElementById('margenPorcentaje').textContent = `${margen}%`;
+
+            // Alerta
+            const alertaML = document.getElementById('alertaML');
+            if (gananciaNeta < costoTotal) {
+                alertaML.style.display = 'flex';
+                document.getElementById('textoAlerta').textContent = '⚠️ ¡Cuidado! Tu ganancia es muy baja o negativa.';
+            } else if (margen < 20) {
+                alertaML.style.display = 'flex';
+                document.getElementById('textoAlerta').textContent = '⚠️ Margen bajo. Considera aumentar el precio.';
+            } else {
+                alertaML.style.display = 'none';
             }
-            loadHistory();
         }
 
-        function updateConfigInputs() {
-            document.getElementById('configPLAStandard').value = config.plaStandard;
-            document.getElementById('configPLASilk').value = config.plaSilk;
-            document.getElementById('configWear').value = config.wearPerHour;
-            document.getElementById('configMaintenance').value = config.monthlyMaintenance;
-            document.getElementById('configPower').value = config.powerConsumption;
-            document.getElementById('configEnergy').value = config.energyRate;
+        function copiarPrecioML() {
+            const precio = document.getElementById('precioVentaML').textContent;
+            navigator.clipboard.writeText(precio.replace('$', ''));
+            mostrarNotificacion('📋 Precio ML copiado al portapapeles');
         }
 
-        function saveConfig() {
-            config.wearPerHour = parseFloat(document.getElementById('configWear').value);
-            config.monthlyMaintenance = parseFloat(document.getElementById('configMaintenance').value);
-            config.powerConsumption = parseFloat(document.getElementById('configPower').value);
-            config.energyRate = parseFloat(document.getElementById('configEnergy').value);
-            localStorage.setItem('appilar3dConfig', JSON.stringify(config));
-            calculateCosts();
+        document.getElementById('categoriaML').addEventListener('change', calcularPrecioML);
+        document.getElementById('cuotas').addEventListener('change', calcularPrecioML);
+
+        // ============================================
+        // TAB 3: SIMULADOR ML
+        // ============================================
+        function simularPrecioML() {
+            const precioPersonalizado = parseFloat(document.getElementById('precioPersonalizadoML').value);
+            
+            if (!precioPersonalizado || precioPersonalizado <= 0) return;
+
+            const costoTotalText = document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.');
+            const costoTotal = parseFloat(costoTotalText);
+            const comisionML = parseFloat(document.getElementById('categoriaML').value);
+            const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+
+            const comisionEnARS = precioPersonalizado * (comisionML / 100);
+            const costoCuotasARS = precioPersonalizado * (costosCuotas / 100);
+            const teQuedaNeto = precioPersonalizado - costoTotal - comisionEnARS - costoCuotasARS;
+            const margenSim = ((teQuedaNeto / precioPersonalizado) * 100).toFixed(2);
+
+            document.getElementById('resultadoSimulacionML').style.display = 'block';
+            document.getElementById('tuPrecioML').textContent = `$${formatearNumero(precioPersonalizado)}`;
+            document.getElementById('costoDeLaImpML').textContent = `-$${formatearNumero(costoTotal)}`;
+            document.getElementById('comisionDeMLa').textContent = `-$${formatearNumero(comisionEnARS)}`;
+            document.getElementById('cuotasDeMLa').textContent = `-$${formatearNumero(costoCuotasARS)}`;
+            document.getElementById('teQuedaNetoML').textContent = `$${formatearNumero(teQuedaNeto)}`;
+            document.getElementById('margenSimML').textContent = `${margenSim}%`;
+
+            const alertaSimulacion = document.getElementById('alertaSimulacionML');
+            if (teQuedaNeto < 0) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaML').textContent = '❌';
+                document.getElementById('textoAlertaSimML').textContent = 'Perderías dinero con este precio.';
+            } else if (margenSim < 20) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaML').textContent = '⚠️';
+                document.getElementById('textoAlertaSimML').textContent = 'Margen bajo, considera aumentar el precio.';
+            } else {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-warning');
+                alertaSimulacion.classList.add('alert-success');
+                document.getElementById('iconoAlertaML').textContent = '✅';
+                document.getElementById('textoAlertaSimML').textContent = `¡Excelente! Ganancia de $${formatearNumero(teQuedaNeto)}.`;
+            }
         }
 
-        function updateConfigFilaments() {
-            config.plaStandard = parseFloat(document.getElementById('configPLAStandard').value);
-            config.plaSilk = parseFloat(document.getElementById('configPLASilk').value);
-            localStorage.setItem('appilar3dConfig', JSON.stringify(config));
-            calculateCosts();
+        document.getElementById('precioPersonalizadoML').addEventListener('input', simularPrecioML);
+
+        // ============================================
+        // TAB 4: SIMULADOR EN PERSONA
+        // ============================================
+        function simularPrecioPersona() {
+            const precioPersonalizado = parseFloat(document.getElementById('precioPersonalizadoPersona').value);
+            
+            if (!precioPersonalizado || precioPersonalizado <= 0) return;
+
+            const costoTotalText = document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.');
+            const costoTotal = parseFloat(costoTotalText);
+            const teQuedaNeto = precioPersonalizado - costoTotal;
+            const margenSim = ((teQuedaNeto / precioPersonalizado) * 100).toFixed(2);
+
+            document.getElementById('resultadoSimulacionPersona').style.display = 'block';
+            document.getElementById('tuPrecioPersona').textContent = `$${formatearNumero(precioPersonalizado)}`;
+            document.getElementById('costoDeLaImpPersona').textContent = `-$${formatearNumero(costoTotal)}`;
+            document.getElementById('teQuedaNetoPersona').textContent = `$${formatearNumero(teQuedaNeto)}`;
+            document.getElementById('margenSimPersona').textContent = `${margenSim}%`;
+
+            const alertaSimulacion = document.getElementById('alertaSimulacionPersona');
+            if (teQuedaNeto < 0) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaPersona').textContent = '❌';
+                document.getElementById('textoAlertaSimPersona').textContent = 'Perderías dinero con este precio.';
+            } else if (margenSim < 20) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaPersona').textContent = '⚠️';
+                document.getElementById('textoAlertaSimPersona').textContent = 'Margen bajo, considera aumentar el precio.';
+            } else {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-warning');
+                alertaSimulacion.classList.add('alert-success');
+                document.getElementById('iconoAlertaPersona').textContent = '✅';
+                document.getElementById('textoAlertaSimPersona').textContent = `¡Excelente! Ganancia de $${formatearNumero(teQuedaNeto)}.`;
+            }
         }
 
-        function resetConfig() {
-            config = { ...defaultConfig };
-            localStorage.setItem('appilar3dConfig', JSON.stringify(config));
-            updateConfigInputs();
-            calculateCosts();
-            alert('✅ Configuración restaurada');
+        document.getElementById('precioPersonalizadoPersona').addEventListener('input', simularPrecioPersona);
+
+        // ============================================
+        // TAB 5: REGISTRO DE VENTAS
+        // ============================================
+        function agregarVenta() {
+            const nombre = document.getElementById('nombreProductoVenta').value.trim();
+            const precioVenta = parseFloat(document.getElementById('precioVentaReg').value);
+            const fecha = document.getElementById('fechaVenta').value;
+            const lugarVenta = document.getElementById('lugarVenta').value;
+
+            if (!nombre || !precioVenta || !fecha) {
+                mostrarNotificacion('⚠️ Completa nombre, precio y fecha');
+                return;
+            }
+
+            // Calcular ganancia automáticamente si no está ingresada
+            let gananciaNeta = parseFloat(document.getElementById('gananciaNetaReg').value);
+            
+            if (!gananciaNeta || isNaN(gananciaNeta)) {
+                const costoTotalText = document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.');
+                const costoTotal = parseFloat(costoTotalText);
+                
+                if (lugarVenta === 'ml') {
+                    const comisionML = parseFloat(document.getElementById('categoriaML').value);
+                    const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+                    const comisionEnARS = precioVenta * (comisionML / 100);
+                    const costoCuotasARS = precioVenta * (costosCuotas / 100);
+                    gananciaNeta = precioVenta - costoTotal - comisionEnARS - costoCuotasARS;
+                } else {
+                    gananciaNeta = precioVenta - costoTotal;
+                }
+            }
+
+            if (gananciaNeta < 0) {
+                mostrarNotificacion('⚠️ La ganancia no puede ser negativa');
+                return;
+            }
+
+            const venta = {
+                id: Date.now(),
+                nombre,
+                precioVenta,
+                gananciaNeta,
+                fecha,
+                lugarVenta,
+                margen: ((gananciaNeta / precioVenta) * 100).toFixed(2)
+            };
+
+            ventas.push(venta);
+            guardarDatos();
+            actualizarTablaVentas();
+            
+            // Limpiar formulario
+            document.getElementById('nombreProductoVenta').value = '';
+            document.getElementById('precioVentaReg').value = '';
+            document.getElementById('gananciaNetaReg').value = '';
+            document.getElementById('fechaVenta').value = '';
+
+            mostrarNotificacion('✅ Venta registrada correctamente');
         }
 
-        function openConfig() {
-            document.getElementById('configModal').classList.add('active');
+        function actualizarTablaVentas() {
+            const tbody = document.getElementById('cuerpoTabla');
+            const messageEmpty = document.getElementById('mensajeVacio');
+            
+            tbody.innerHTML = '';
+
+            if (ventas.length === 0) {
+                messageEmpty.style.display = 'flex';
+                return;
+            }
+
+            messageEmpty.style.display = 'none';
+
+            ventas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).forEach(venta => {
+                const lugarTexto = venta.lugarVenta === 'ml' ? 'ML' : venta.lugarVenta === 'persona' ? 'Persona' : 'Otro';
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${new Date(venta.fecha).toLocaleDateString('es-AR')}</td>
+                    <td><strong>${venta.nombre}</strong></td>
+                    <td>${lugarTexto}</td>
+                    <td>$${formatearNumero(venta.precioVenta)}</td>
+                    <td style="color: var(--success); font-weight: 600;">$${formatearNumero(venta.gananciaNeta)}</td>
+                    <td>${venta.margen}%</td>
+                    <td>
+                        <button onclick="eliminarVenta(${venta.id})" class="btn-danger" style="padding: 8px 12px; font-size: 0.85em; margin-top: 0;">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+
+            actualizarEstadisticas();
         }
 
-        function closeConfig() {
-            document.getElementById('configModal').classList.remove('active');
+        function eliminarVenta(id) {
+            if (confirm('¿Eliminar esta venta?')) {
+                ventas = ventas.filter(v => v.id !== id);
+                guardarDatos();
+                actualizarTablaVentas();
+            }
         }
 
-        // PESTAÑA SWITCH
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
-            event.target.classList.add('active');
-        }
+        function filtrarVentas() {
+            const busqueda = document.getElementById('busquedaVentas').value.toLowerCase();
+            const filas = document.querySelectorAll('#cuerpoTabla tr');
 
-        // FILAMENTO
-        function updateFilamentPrice() {
-            calculateCosts();
-        }
-
-        function getFilamentPrice() {
-            const type = document.getElementById('filamentType').value;
-            return type === 'pla-standard' ? config.plaStandard : config.plaSilk;
-        }
-
-        // CALCULAR COSTOS
-        function calculateCosts() {
-            const weight = parseFloat(document.getElementById('weight').value) || 0;
-            const efficiency = parseFloat(document.getElementById('efficiency').value) || 95;
-            const hours = parseFloat(document.getElementById('hours').value) || 0;
-            const minutes = parseFloat(document.getElementById('minutes').value) || 0;
-
-            // Filamento necesario
-            const filamentNeeded = weight / (efficiency / 100);
-            const filamentCost = (filamentNeeded / 1000) * getFilamentPrice();
-
-            // Tiempo total en horas
-            const totalHours = hours + (minutes / 60);
-
-            // Energía
-            const energyCost = (config.powerConsumption / 1000) * totalHours * config.energyRate;
-
-            // Desgaste
-            const wearCost = totalHours * config.wearPerHour;
-
-            // Total
-            const totalCost = filamentCost + energyCost + wearCost;
-            currentTotalCost = totalCost;
-
-            // Mostrar tiempo
-            document.getElementById('displayTime').textContent = `${hours}:${String(minutes).padStart(2, '0')}`;
-
-            // Actualizar costos
-            document.getElementById('filamentCost').textContent = `$${filamentCost.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('energyCost').textContent = `$${energyCost.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('wearCost').textContent = `$${wearCost.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('totalCost').textContent = `$${totalCost.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-
-            // Precios con márgenes
-            updateMarginPrices(totalCost);
-
-            // Actualizar ML
-            const mlPrice = applyPsychologicalPrice(totalCost * (1 + selectedMargin / 100));
-            document.getElementById('mlPrice').textContent = `$${mlPrice.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-
-            // Actualizar input de precio final
-            document.getElementById('finalPrice').value = Math.floor(mlPrice);
-
-            document.getElementById('personCost').value = Math.floor(totalCost);
-        }
-
-        function updateMarginPrices(totalCost) {
-            const margins = [40, 70, 120];
-            margins.forEach(margin => {
-                const price = totalCost * (1 + margin / 100);
-                const psychologicalPrice = applyPsychologicalPrice(price);
-                document.getElementById(`margin-${margin}`).textContent = `$${psychologicalPrice.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
+            filas.forEach(fila => {
+                const nombre = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                fila.style.display = nombre.includes(busqueda) ? '' : 'none';
             });
         }
 
-        function selectMargin(margin) {
-            selectedMargin = margin;
-            document.querySelectorAll('.price-option').forEach(el => el.classList.remove('selected'));
-            event.target.closest('.price-option').classList.add('selected');
-            calculateCosts();
+        function actualizarEstadisticas() {
+            const totalVentas = ventas.length;
+            const gananciaTotalVentas = ventas.reduce((sum, v) => sum + v.gananciaNeta, 0);
+            const margenPromedioCalc = ventas.length > 0 
+                ? (ventas.reduce((sum, v) => sum + parseFloat(v.margen), 0) / ventas.length).toFixed(2)
+                : 0;
+            const ventaPromedioCalc = ventas.length > 0
+                ? (ventas.reduce((sum, v) => sum + v.precioVenta, 0) / ventas.length).toFixed(2)
+                : 0;
+
+            document.getElementById('totalVentas').textContent = totalVentas;
+            document.getElementById('gananciaTotalVentas').textContent = `$${formatearNumero(gananciaTotalVentas)}`;
+            document.getElementById('margenPromedio').textContent = `${margenPromedioCalc}%`;
+            document.getElementById('ventaPromedio').textContent = `$${formatearNumero(parseFloat(ventaPromedioCalc))}`;
         }
 
-        // PRECIO PSICOLÓGICO
-        function applyPsychologicalPrice(price) {
-            const str = Math.floor(price).toString();
-            if (str.length <= 1) return Math.floor(price);
-            
-            const lastDigit = parseInt(str[str.length - 1]);
-            let psyPrice;
-
-            if (lastDigit >= 5) {
-                psyPrice = Math.floor(price / 10) * 10 - 1;
-            } else {
-                psyPrice = Math.floor(price / 10) * 10 - 1;
-            }
-
-            return Math.max(psyPrice, Math.floor(price));
-        }
-
-        // VENTA PERSONAL
-        function calculatePersonalSales() {
-            const cost = parseFloat(document.getElementById('personCost').value) || 0;
-            const margin = parseFloat(document.getElementById('personMargin').value) || 0;
-            const price = cost * (1 + margin / 100);
-            const psychologicalPrice = applyPsychologicalPrice(price);
-            const profit = psychologicalPrice - cost;
-
-            document.getElementById('personPrice').textContent = `$${psychologicalPrice.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('personProfit').textContent = `$${profit.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-        }
-
-        // HISTORIAL
-        function saveToHistory() {
-            const name = document.getElementById('productName').value || 'Producto sin nombre';
-            const price = parseFloat(document.getElementById('finalPrice').value) || 0;
-            const cost = currentTotalCost;
-
-            if (price === 0) {
-                alert('⚠️ Ingresa un precio válido');
+        function exportarVentas() {
+            if (ventas.length === 0) {
+                mostrarNotificacion('⚠️ No hay ventas para exportar');
                 return;
             }
 
-            const item = {
-                id: Date.now(),
-                name,
-                price,
-                cost,
-                date: new Date().toLocaleDateString('es-AR'),
-                profit: price - cost,
-                margin: Math.round(((price - cost) / cost) * 100)
+            let csv = 'Fecha,Producto,Canal,Precio Venta,Ganancia Neta,Margen\n';
+            ventas.forEach(v => {
+                csv += `${v.fecha},"${v.nombre}",${v.lugarVenta},${v.precioVenta},${v.gananciaNeta},${v.margen}%\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ventas_3d_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            mostrarNotificacion('📥 Historial descargado');
+        }
+
+        function limpiarHistorial() {
+            if (confirm('⚠️ ¿Eliminar TODOS los registros de ventas?')) {
+                ventas = [];
+                guardarDatos();
+                actualizarTablaVentas();
+                mostrarNotificacion('🗑️ Historial eliminado');
+            }
+        }
+
+        // ============================================
+        // MODALES
+        // ============================================
+        function abrirModalConfig() {
+            actualizarUIConfiguracion();
+            document.getElementById('modalConfig').style.display = 'flex';
+        }
+
+        function cerrarModalConfig() {
+            document.getElementById('modalConfig').style.display = 'none';
+        }
+
+        function abrirModalFilamento() {
+            document.getElementById('modalFilamento').style.display = 'flex';
+        }
+
+        function cerrarModalFilamento() {
+            document.getElementById('modalFilamento').style.display = 'none';
+            document.getElementById('nombreFilamento').value = '';
+            document.getElementById('precioFilamento').value = '';
+        }
+
+        function actualizarUIConfiguracion() {
+            document.getElementById('modeloMaquina').value = config.modeloMaquina;
+            document.getElementById('consumoWatts').value = config.consumoWatts;
+            document.getElementById('desgasteHora').value = config.desgasteHora;
+            document.getElementById('tarifaKwh').value = config.tarifaKwh;
+            actualizarListaFilamentos();
+        }
+
+        function actualizarListaFilamentos() {
+            const lista = document.getElementById('listaFilamentos');
+            lista.innerHTML = '';
+
+            config.filamentos.forEach((fil, index) => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 14px; background: linear-gradient(135deg, rgba(168, 153, 104, 0.08) 0%, rgba(217, 200, 170, 0.08) 100%); border: 1px solid rgba(168, 153, 104, 0.1); border-radius: 8px; margin-bottom: 10px; transition: all 0.3s ease;';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color: var(--primary-dark);">${fil.nombre}</strong><br>
+                        <span style="color: var(--text-secondary); font-size: 0.9em;">$${formatearNumero(fil.precio)}/kg</span>
+                    </div>
+                    <button onclick="eliminarFilamento(${index})" class="btn-danger" style="padding: 6px 12px; font-size: 0.85em; margin-top: 0;">🗑️</button>
+                `;
+                lista.appendChild(item);
+            });
+        }
+
+        function guardarFilamento() {
+            const nombre = document.getElementById('nombreFilamento').value.trim();
+            const precio = parseFloat(document.getElementById('precioFilamento').value);
+
+            if (!nombre || !precio) {
+                mostrarNotificacion('⚠️ Completa todos los campos');
+                return;
+            }
+
+            config.filamentos.push({ nombre, precio });
+            guardarDatos();
+            actualizarListaFilamentos();
+            cerrarModalFilamento();
+            mostrarNotificacion('✅ Filamento agregado');
+        }
+
+        function eliminarFilamento(index) {
+            config.filamentos.splice(index, 1);
+            guardarDatos();
+            actualizarListaFilamentos();
+            mostrarNotificacion('🗑️ Filamento eliminado');
+        }
+
+        function guardarConfiguracion() {
+            config.modeloMaquina = document.getElementById('modeloMaquina').value;
+            config.consumoWatts = parseFloat(document.getElementById('consumoWatts').value);
+            config.desgasteHora = parseFloat(document.getElementById('desgasteHora').value);
+            config.tarifaKwh = parseFloat(document.getElementById('tarifaKwh').value);
+
+            guardarDatos();
+            calcularCostoImpresion();
+            actualizarPrecioML();
+        }
+
+        function exportarJSON() {
+            const datos = {
+                config,
+                ventas,
+                fechaExportacion: new Date().toISOString()
             };
 
-            history.unshift(item);
-            localStorage.setItem('appilar3dHistory', JSON.stringify(history));
-            displayHistory();
-            alert('✅ Venta registrada');
-            clearCalculator();
+            const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `calculadora3d_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            mostrarNotificacion('📤 Configuración descargada');
         }
 
-        function savePersonalSale() {
-            const cost = parseFloat(document.getElementById('personCost').value) || 0;
-            const price = parseFloat(document.getElementById('personPrice').textContent.replace(/[^\d]/g, '')) || 0;
+        function importarJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            if (cost === 0 || price === 0) {
-                alert('⚠️ Completa todos los datos');
-                return;
-            }
-
-            const item = {
-                id: Date.now(),
-                name: 'Venta Personal',
-                price,
-                cost,
-                date: new Date().toLocaleDateString('es-AR'),
-                profit: price - cost,
-                margin: Math.round(((price - cost) / cost) * 100),
-                channel: 'Personal'
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const datos = JSON.parse(e.target.result);
+                    config = datos.config;
+                    ventas = datos.ventas;
+                    guardarDatos();
+                    actualizarUI();
+                    mostrarNotificacion('✅ Datos importados correctamente');
+                } catch (err) {
+                    mostrarNotificacion('❌ Error al importar el archivo');
+                }
             };
-
-            history.unshift(item);
-            localStorage.setItem('appilar3dHistory', JSON.stringify(history));
-            displayHistory();
-            alert('✅ Venta personal registrada');
-            document.getElementById('personCost').value = 0;
-            calculatePersonalSales();
+            reader.readAsText(file);
         }
 
-        function displayHistory() {
-            const list = document.getElementById('historyList');
-            if (history.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: #999;">No hay ventas registradas aún</p>';
-                return;
-            }
-
-            list.innerHTML = history.map(item => `
-                <div class="history-item">
-                    <div class="history-item-info">
-                        <div class="history-item-name">${item.name}</div>
-                        <div class="history-item-details">
-                            ${item.date} • Ganancia: +${item.margin}% • Costo: $${item.cost.toLocaleString('es-AR', {maximumFractionDigits: 0})}
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div class="history-item-price">$${item.price.toLocaleString('es-AR', {maximumFractionDigits: 0})}</div>
-                        <div style="font-size: 12px; color: #28a745; margin-top: 4px;">+$${item.profit.toLocaleString('es-AR', {maximumFractionDigits: 0})}</div>
-                    </div>
-                    <div class="history-actions">
-                        <button class="btn-small delete" onclick="deleteHistory(${item.id})">Eliminar</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function deleteHistory(id) {
-            if (confirm('¿Eliminar esta venta?')) {
-                history = history.filter(item => item.id !== id);
-                localStorage.setItem('appilar3dHistory', JSON.stringify(history));
-                displayHistory();
+        function resetearApp() {
+            if (confirm('⚠️ ¿Resetear toda la app?')) {
+                localStorage.clear();
+                config = CONFIG_DEFAULT;
+                ventas = [];
+                actualizarUI();
+                mostrarNotificacion('🔄 App reseteada');
             }
         }
 
-        function clearCalculator() {
-            document.getElementById('productName').value = '';
-            document.getElementById('weight').value = 100;
-            document.getElementById('efficiency').value = 95;
-            document.getElementById('hours').value = 0;
-            document.getElementById('minutes').value = 30;
-            calculateCosts();
+        // ============================================
+        // UTILIDADES
+        // ============================================
+        function actualizarUI() {
+            calcularCostoImpresion();
+            actualizarPrecioML();
+            actualizarTablaVentas();
         }
 
-        function loadHistory() {
-            const saved = localStorage.getItem('appilar3dHistory');
-            if (saved) {
-                history = JSON.parse(saved);
-                displayHistory();
-            }
+        function mostrarNotificacion(mensaje) {
+            const div = document.createElement('div');
+            div.className = 'notification';
+            div.textContent = mensaje;
+            document.body.appendChild(div);
+
+            setTimeout(() => {
+                div.style.animation = 'slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                setTimeout(() => div.remove(), 400);
+            }, 2800);
         }
 
-        // INICIAR
-        loadConfig();
-        calculateCosts();
-        calculatePersonalSales();
+        // Fecha por defecto
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaVenta').value = today;
+
+        // Cerrar modales al hacer click fuera
+        document.getElementById('modalConfig').addEventListener('click', (e) => {
+            if (e.target.id === 'modalConfig') cerrarModalConfig();
+        });
+
+        document.getElementById('modalFilamento').addEventListener('click', (e) => {
+            if (e.target.id === 'modalFilamento') cerrarModalFilamento();
+        });
+
+        // Inicializar
+        cargarDatos();
     </script>
 </body>
 </html>
