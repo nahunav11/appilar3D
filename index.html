@@ -779,11 +779,11 @@
         </header>
 
         <div class="tabs-wrapper">
-            <button class="tab-btn active" data-tab="costo-impresion">Costo de Impresión</button>
-            <button class="tab-btn" data-tab="precio-ml">Precio Mercado Libre</button>
-            <button class="tab-btn" data-tab="simulador-ml">Simulador ML</button>
-            <button class="tab-btn" data-tab="simulador-persona">Simulador Personal</button>
-            <button class="tab-btn" data-tab="ventas">Registro de Ventas</button>
+            <button class="tab-btn active" data-tab="costo-impresion">💰 Costo</button>
+            <button class="tab-btn" data-tab="precio-ml">🛒 Precio ML</button>
+            <button class="tab-btn" data-tab="simulador-ml">📊 Simulador ML</button>
+            <button class="tab-btn" data-tab="simulador-persona">🤝 Venta Personal</button>
+            <button class="tab-btn" data-tab="ventas">📈 Ventas</button>
         </div>
 
         <!-- TAB 1: COSTO DE IMPRESIÓN -->
@@ -1248,7 +1248,7 @@
             const costoTotal = costoFilamento + costoDesgaste + costoElectricidad;
 
             // Mostrar resultados
-            document.getElementById('costoTotal').textContent = `${costoTotal.toFixed(2)}`;
+            document.getElementById('costoTotal').textContent = `$${costoTotal.toFixed(2)}`;
 
             return costoTotal;
         }
@@ -1265,4 +1265,475 @@
 
         function copiarCosto() {
             const costo = document.getElementById('costoTotal').textContent;
-            navigator.clipboard.writeText(costo.replace('
+            navigator.clipboard.writeText(costo.replace('$', ''));
+            mostrarNotificacion('📋 Costo copiado al portapapeles');
+        }
+
+        // ============================================
+        // TAB 2: PRECIO MERCADO LIBRE
+        // ============================================
+        function calcularPrecioML() {
+            const costoTotal = calcularCostoImpresion();
+            const comisionML = parseFloat(document.getElementById('categoriaML').value);
+            const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+
+            const porcentajeTotal = (comisionML + costosCuotas) / 100;
+            let precioRecomendado = costoTotal / (1 - porcentajeTotal);
+
+            const precioFinal = Math.round(precioRecomendado / 100) * 100 - 1;
+
+            document.getElementById('precioVentaML').textContent = `$${precioFinal.toFixed(2)}`;
+            actualizarAnalisisML(precioFinal);
+        }
+
+        function actualizarAnalisisML(precioVenta) {
+            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+            const comisionML = parseFloat(document.getElementById('categoriaML').value);
+            const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+
+            const comisionEnARS = precioVenta * (comisionML / 100);
+            const costoCuotasARS = precioVenta * (costosCuotas / 100);
+            const gananciaNeta = precioVenta - costoTotal - comisionEnARS - costoCuotasARS;
+            const margen = ((gananciaNeta / precioVenta) * 100).toFixed(2);
+
+            document.getElementById('costoImpresionML').textContent = `$${costoTotal.toFixed(2)}`;
+            document.getElementById('comisionML').textContent = `${comisionML.toFixed(2)}%`;
+            document.getElementById('costoCuotasML').textContent = `$${costoCuotasARS.toFixed(2)}`;
+            document.getElementById('gananciaNeta').textContent = `$${gananciaNeta.toFixed(2)}`;
+            document.getElementById('margenPorcentaje').textContent = `${margen}%`;
+
+            // Alerta
+            const alertaML = document.getElementById('alertaML');
+            if (gananciaNeta < costoTotal) {
+                alertaML.style.display = 'flex';
+                document.getElementById('textoAlerta').textContent = '⚠️ ¡Cuidado! Tu ganancia es muy baja o negativa.';
+            } else if (margen < 20) {
+                alertaML.style.display = 'flex';
+                document.getElementById('textoAlerta').textContent = '⚠️ Margen bajo. Considera aumentar el precio.';
+            } else {
+                alertaML.style.display = 'none';
+            }
+        }
+
+        function copiarPrecioML() {
+            const precio = document.getElementById('precioVentaML').textContent;
+            navigator.clipboard.writeText(precio.replace('$', ''));
+            mostrarNotificacion('📋 Precio ML copiado al portapapeles');
+        }
+
+        document.getElementById('categoriaML').addEventListener('change', calcularPrecioML);
+        document.getElementById('cuotas').addEventListener('change', calcularPrecioML);
+
+        // ============================================
+        // TAB 3: SIMULADOR ML
+        // ============================================
+        function simularPrecioML() {
+            const precioPersonalizado = parseFloat(document.getElementById('precioPersonalizadoML').value);
+            
+            if (!precioPersonalizado || precioPersonalizado <= 0) return;
+
+            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+            const comisionML = parseFloat(document.getElementById('categoriaML').value);
+            const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+
+            const comisionEnARS = precioPersonalizado * (comisionML / 100);
+            const costoCuotasARS = precioPersonalizado * (costosCuotas / 100);
+            const teQuedaNeto = precioPersonalizado - costoTotal - comisionEnARS - costoCuotasARS;
+            const margenSim = ((teQuedaNeto / precioPersonalizado) * 100).toFixed(2);
+
+            document.getElementById('resultadoSimulacionML').style.display = 'block';
+            document.getElementById('tuPrecioML').textContent = `$${precioPersonalizado.toFixed(2)}`;
+            document.getElementById('costoDeLaImpML').textContent = `-$${costoTotal.toFixed(2)}`;
+            document.getElementById('comisionDeMLa').textContent = `-$${comisionEnARS.toFixed(2)}`;
+            document.getElementById('cuotasDeMLa').textContent = `-$${costoCuotasARS.toFixed(2)}`;
+            document.getElementById('teQuedaNetoML').textContent = `$${teQuedaNeto.toFixed(2)}`;
+            document.getElementById('margenSimML').textContent = `${margenSim}%`;
+
+            const alertaSimulacion = document.getElementById('alertaSimulacionML');
+            if (teQuedaNeto < 0) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaML').textContent = '❌';
+                document.getElementById('textoAlertaSimML').textContent = 'Perderías dinero con este precio.';
+            } else if (margenSim < 20) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaML').textContent = '⚠️';
+                document.getElementById('textoAlertaSimML').textContent = 'Margen bajo, considera aumentar el precio.';
+            } else {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-warning');
+                alertaSimulacion.classList.add('alert-success');
+                document.getElementById('iconoAlertaML').textContent = '✅';
+                document.getElementById('textoAlertaSimML').textContent = `¡Excelente! Ganancia de $${teQuedaNeto.toFixed(2)}.`;
+            }
+        }
+
+        document.getElementById('precioPersonalizadoML').addEventListener('input', simularPrecioML);
+
+        // ============================================
+        // TAB 4: SIMULADOR EN PERSONA
+        // ============================================
+        function simularPrecioPersona() {
+            const precioPersonalizado = parseFloat(document.getElementById('precioPersonalizadoPersona').value);
+            
+            if (!precioPersonalizado || precioPersonalizado <= 0) return;
+
+            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+            const teQuedaNeto = precioPersonalizado - costoTotal;
+            const margenSim = ((teQuedaNeto / precioPersonalizado) * 100).toFixed(2);
+
+            document.getElementById('resultadoSimulacionPersona').style.display = 'block';
+            document.getElementById('tuPrecioPersona').textContent = `$${precioPersonalizado.toFixed(2)}`;
+            document.getElementById('costoDeLaImpPersona').textContent = `-$${costoTotal.toFixed(2)}`;
+            document.getElementById('teQuedaNetoPersona').textContent = `$${teQuedaNeto.toFixed(2)}`;
+            document.getElementById('margenSimPersona').textContent = `${margenSim}%`;
+
+            const alertaSimulacion = document.getElementById('alertaSimulacionPersona');
+            if (teQuedaNeto < 0) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaPersona').textContent = '❌';
+                document.getElementById('textoAlertaSimPersona').textContent = 'Perderías dinero con este precio.';
+            } else if (margenSim < 20) {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-success');
+                alertaSimulacion.classList.add('alert-warning');
+                document.getElementById('iconoAlertaPersona').textContent = '⚠️';
+                document.getElementById('textoAlertaSimPersona').textContent = 'Margen bajo, considera aumentar el precio.';
+            } else {
+                alertaSimulacion.style.display = 'flex';
+                alertaSimulacion.classList.remove('alert-warning');
+                alertaSimulacion.classList.add('alert-success');
+                document.getElementById('iconoAlertaPersona').textContent = '✅';
+                document.getElementById('textoAlertaSimPersona').textContent = `¡Excelente! Ganancia de $${teQuedaNeto.toFixed(2)}.`;
+            }
+        }
+
+        document.getElementById('precioPersonalizadoPersona').addEventListener('input', simularPrecioPersona);
+
+        // ============================================
+        // TAB 5: REGISTRO DE VENTAS
+        // ============================================
+        function agregarVenta() {
+            const nombre = document.getElementById('nombreProductoVenta').value.trim();
+            const precioVenta = parseFloat(document.getElementById('precioVentaReg').value);
+            const fecha = document.getElementById('fechaVenta').value;
+            const lugarVenta = document.getElementById('lugarVenta').value;
+
+            if (!nombre || !precioVenta || !fecha) {
+                mostrarNotificacion('⚠️ Completa nombre, precio y fecha');
+                return;
+            }
+
+            // Calcular ganancia automáticamente si no está ingresada
+            let gananciaNeta = parseFloat(document.getElementById('gananciaNetaReg').value);
+            
+            if (!gananciaNeta || isNaN(gananciaNeta)) {
+                const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+                
+                if (lugarVenta === 'ml') {
+                    const comisionML = parseFloat(document.getElementById('categoriaML').value);
+                    const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
+                    const comisionEnARS = precioVenta * (comisionML / 100);
+                    const costoCuotasARS = precioVenta * (costosCuotas / 100);
+                    gananciaNeta = precioVenta - costoTotal - comisionEnARS - costoCuotasARS;
+                } else {
+                    gananciaNeta = precioVenta - costoTotal;
+                }
+            }
+
+            if (gananciaNeta < 0) {
+                mostrarNotificacion('⚠️ La ganancia no puede ser negativa');
+                return;
+            }
+
+            const venta = {
+                id: Date.now(),
+                nombre,
+                precioVenta,
+                gananciaNeta,
+                fecha,
+                lugarVenta,
+                margen: ((gananciaNeta / precioVenta) * 100).toFixed(2)
+            };
+
+            ventas.push(venta);
+            guardarDatos();
+            actualizarTablaVentas();
+            
+            // Limpiar formulario
+            document.getElementById('nombreProductoVenta').value = '';
+            document.getElementById('precioVentaReg').value = '';
+            document.getElementById('gananciaNetaReg').value = '';
+            document.getElementById('fechaVenta').value = '';
+
+            mostrarNotificacion('✅ Venta registrada correctamente');
+        }
+
+        function actualizarTablaVentas() {
+            const tbody = document.getElementById('cuerpoTabla');
+            const messageEmpty = document.getElementById('mensajeVacio');
+            
+            tbody.innerHTML = '';
+
+            if (ventas.length === 0) {
+                messageEmpty.style.display = 'flex';
+                return;
+            }
+
+            messageEmpty.style.display = 'none';
+
+            ventas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).forEach(venta => {
+                const lugarTexto = venta.lugarVenta === 'ml' ? 'ML' : venta.lugarVenta === 'persona' ? 'Persona' : 'Otro';
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${new Date(venta.fecha).toLocaleDateString('es-AR')}</td>
+                    <td><strong>${venta.nombre}</strong></td>
+                    <td>${lugarTexto}</td>
+                    <td>$${venta.precioVenta.toFixed(2)}</td>
+                    <td style="color: var(--success); font-weight: 600;">$${venta.gananciaNeta.toFixed(2)}</td>
+                    <td>${venta.margen}%</td>
+                    <td>
+                        <button onclick="eliminarVenta(${venta.id})" class="btn-danger" style="padding: 8px 12px; font-size: 0.85em; margin-top: 0;">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+
+            actualizarEstadisticas();
+        }
+
+        function eliminarVenta(id) {
+            if (confirm('¿Eliminar esta venta?')) {
+                ventas = ventas.filter(v => v.id !== id);
+                guardarDatos();
+                actualizarTablaVentas();
+            }
+        }
+
+        function filtrarVentas() {
+            const busqueda = document.getElementById('busquedaVentas').value.toLowerCase();
+            const filas = document.querySelectorAll('#cuerpoTabla tr');
+
+            filas.forEach(fila => {
+                const nombre = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                fila.style.display = nombre.includes(busqueda) ? '' : 'none';
+            });
+        }
+
+        function actualizarEstadisticas() {
+            const totalVentas = ventas.length;
+            const gananciaTotalVentas = ventas.reduce((sum, v) => sum + v.gananciaNeta, 0);
+            const margenPromedioCalc = ventas.length > 0 
+                ? (ventas.reduce((sum, v) => sum + parseFloat(v.margen), 0) / ventas.length).toFixed(2)
+                : 0;
+            const ventaPromedioCalc = ventas.length > 0
+                ? (ventas.reduce((sum, v) => sum + v.precioVenta, 0) / ventas.length).toFixed(2)
+                : 0;
+
+            document.getElementById('totalVentas').textContent = totalVentas;
+            document.getElementById('gananciaTotalVentas').textContent = `$${gananciaTotalVentas.toFixed(2)}`;
+            document.getElementById('margenPromedio').textContent = `${margenPromedioCalc}%`;
+            document.getElementById('ventaPromedio').textContent = `$${ventaPromedioCalc}`;
+        }
+
+        function exportarVentas() {
+            if (ventas.length === 0) {
+                mostrarNotificacion('⚠️ No hay ventas para exportar');
+                return;
+            }
+
+            let csv = 'Fecha,Producto,Canal,Precio Venta,Ganancia Neta,Margen\n';
+            ventas.forEach(v => {
+                csv += `${v.fecha},"${v.nombre}",${v.lugarVenta},${v.precioVenta},${v.gananciaNeta},${v.margen}%\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ventas_3d_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            mostrarNotificacion('📥 Historial descargado');
+        }
+
+        function limpiarHistorial() {
+            if (confirm('⚠️ ¿Eliminar TODOS los registros de ventas?')) {
+                ventas = [];
+                guardarDatos();
+                actualizarTablaVentas();
+                mostrarNotificacion('🗑️ Historial eliminado');
+            }
+        }
+
+        // ============================================
+        // MODALES
+        // ============================================
+        function abrirModalConfig() {
+            actualizarUIConfiguracion();
+            document.getElementById('modalConfig').style.display = 'flex';
+        }
+
+        function cerrarModalConfig() {
+            document.getElementById('modalConfig').style.display = 'none';
+        }
+
+        function abrirModalFilamento() {
+            document.getElementById('modalFilamento').style.display = 'flex';
+        }
+
+        function cerrarModalFilamento() {
+            document.getElementById('modalFilamento').style.display = 'none';
+            document.getElementById('nombreFilamento').value = '';
+            document.getElementById('precioFilamento').value = '';
+        }
+
+        function actualizarUIConfiguracion() {
+            document.getElementById('modeloMaquina').value = config.modeloMaquina;
+            document.getElementById('consumoWatts').value = config.consumoWatts;
+            document.getElementById('desgasteHora').value = config.desgasteHora;
+            document.getElementById('tarifaKwh').value = config.tarifaKwh;
+            actualizarListaFilamentos();
+        }
+
+        function actualizarListaFilamentos() {
+            const lista = document.getElementById('listaFilamentos');
+            lista.innerHTML = '';
+
+            config.filamentos.forEach((fil, index) => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 14px; background: linear-gradient(135deg, rgba(168, 153, 104, 0.08) 0%, rgba(217, 200, 170, 0.08) 100%); border: 1px solid rgba(168, 153, 104, 0.1); border-radius: 8px; margin-bottom: 10px; transition: all 0.3s ease;';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color: var(--primary-dark);">${fil.nombre}</strong><br>
+                        <span style="color: var(--text-secondary); font-size: 0.9em;">$${fil.precio}/kg</span>
+                    </div>
+                    <button onclick="eliminarFilamento(${index})" class="btn-danger" style="padding: 6px 12px; font-size: 0.85em; margin-top: 0;">🗑️</button>
+                `;
+                lista.appendChild(item);
+            });
+        }
+
+        function guardarFilamento() {
+            const nombre = document.getElementById('nombreFilamento').value.trim();
+            const precio = parseFloat(document.getElementById('precioFilamento').value);
+
+            if (!nombre || !precio) {
+                mostrarNotificacion('⚠️ Completa todos los campos');
+                return;
+            }
+
+            config.filamentos.push({ nombre, precio });
+            guardarDatos();
+            actualizarListaFilamentos();
+            cerrarModalFilamento();
+            mostrarNotificacion('✅ Filamento agregado');
+        }
+
+        function eliminarFilamento(index) {
+            config.filamentos.splice(index, 1);
+            guardarDatos();
+            actualizarListaFilamentos();
+            mostrarNotificacion('🗑️ Filamento eliminado');
+        }
+
+        function guardarConfiguracion() {
+            config.modeloMaquina = document.getElementById('modeloMaquina').value;
+            config.consumoWatts = parseFloat(document.getElementById('consumoWatts').value);
+            config.desgasteHora = parseFloat(document.getElementById('desgasteHora').value);
+            config.tarifaKwh = parseFloat(document.getElementById('tarifaKwh').value);
+
+            guardarDatos();
+            calcularCostoImpresion();
+            actualizarPrecioML();
+        }
+
+        function exportarJSON() {
+            const datos = {
+                config,
+                ventas,
+                fechaExportacion: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `calculadora3d_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            mostrarNotificacion('📤 Configuración descargada');
+        }
+
+        function importarJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const datos = JSON.parse(e.target.result);
+                    config = datos.config;
+                    ventas = datos.ventas;
+                    guardarDatos();
+                    actualizarUI();
+                    mostrarNotificacion('✅ Datos importados correctamente');
+                } catch (err) {
+                    mostrarNotificacion('❌ Error al importar el archivo');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetearApp() {
+            if (confirm('⚠️ ¿Resetear toda la app?')) {
+                localStorage.clear();
+                config = CONFIG_DEFAULT;
+                ventas = [];
+                actualizarUI();
+                mostrarNotificacion('🔄 App reseteada');
+            }
+        }
+
+        // ============================================
+        // UTILIDADES
+        // ============================================
+        function actualizarUI() {
+            calcularCostoImpresion();
+            actualizarPrecioML();
+            actualizarTablaVentas();
+        }
+
+        function mostrarNotificacion(mensaje) {
+            const div = document.createElement('div');
+            div.className = 'notification';
+            div.textContent = mensaje;
+            document.body.appendChild(div);
+
+            setTimeout(() => {
+                div.style.animation = 'slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                setTimeout(() => div.remove(), 400);
+            }, 2800);
+        }
+
+        // Fecha por defecto
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaVenta').value = today;
+
+        // Cerrar modales al hacer click fuera
+        document.getElementById('modalConfig').addEventListener('click', (e) => {
+            if (e.target.id === 'modalConfig') cerrarModalConfig();
+        });
+
+        document.getElementById('modalFilamento').addEventListener('click', (e) => {
+            if (e.target.id === 'modalFilamento') cerrarModalFilamento();
+        });
+
+        // Inicializar
+        cargarDatos();
+    </script>
+</body>
+</html>
