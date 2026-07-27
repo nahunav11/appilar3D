@@ -1185,6 +1185,11 @@
         let config = CONFIG_DEFAULT;
         let ventas = [];
 
+        // Función para formatear números
+        function formatearNumero(num) {
+            return num.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
         // Cargar datos del localStorage
         function cargarDatos() {
             const configGuardada = localStorage.getItem('config3D');
@@ -1249,7 +1254,7 @@
             const costoTotal = costoFilamento + costoDesgaste + costoElectricidad;
 
             // Mostrar resultados
-            document.getElementById('costoTotal').textContent = `$${costoTotal.toFixed(2)}`;
+            document.getElementById('costoTotal').textContent = `$${formatearNumero(costoTotal)}`;
 
             return costoTotal;
         }
@@ -1283,12 +1288,12 @@
 
             const precioFinal = Math.round(precioRecomendado / 100) * 100 - 1;
 
-            document.getElementById('precioVentaML').textContent = `$${precioFinal.toFixed(2)}`;
+            document.getElementById('precioVentaML').textContent = `$${formatearNumero(precioFinal)}`;
             actualizarAnalisisML(precioFinal);
         }
 
         function actualizarAnalisisML(precioVenta) {
-            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.'));
             const comisionML = parseFloat(document.getElementById('categoriaML').value);
             const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
 
@@ -1297,10 +1302,10 @@
             const gananciaNeta = precioVenta - costoTotal - comisionEnARS - costoCuotasARS;
             const margen = ((gananciaNeta / precioVenta) * 100).toFixed(2);
 
-            document.getElementById('costoImpresionML').textContent = `$${costoTotal.toFixed(2)}`;
-            document.getElementById('comisionML').textContent = `${comisionML.toFixed(2)}%`;
-            document.getElementById('costoCuotasML').textContent = `$${costoCuotasARS.toFixed(2)}`;
-            document.getElementById('gananciaNeta').textContent = `$${gananciaNeta.toFixed(2)}`;
+            document.getElementById('costoImpresionML').textContent = `$${formatearNumero(costoTotal)}`;
+            document.getElementById('comisionML').textContent = `${margen < 0 ? '0' : comisionML.toFixed(2)}%`;
+            document.getElementById('costoCuotasML').textContent = `$${formatearNumero(costoCuotasARS)}`;
+            document.getElementById('gananciaNeta').textContent = `$${formatearNumero(gananciaNeta)}`;
             document.getElementById('margenPorcentaje').textContent = `${margen}%`;
 
             // Alerta
@@ -1333,7 +1338,8 @@
             
             if (!precioPersonalizado || precioPersonalizado <= 0) return;
 
-            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+            const costoTotalText = document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.');
+            const costoTotal = parseFloat(costoTotalText);
             const comisionML = parseFloat(document.getElementById('categoriaML').value);
             const costosCuotas = parseFloat(document.getElementById('cuotas').value) || 0;
 
@@ -1343,11 +1349,11 @@
             const margenSim = ((teQuedaNeto / precioPersonalizado) * 100).toFixed(2);
 
             document.getElementById('resultadoSimulacionML').style.display = 'block';
-            document.getElementById('tuPrecioML').textContent = `$${precioPersonalizado.toFixed(2)}`;
-            document.getElementById('costoDeLaImpML').textContent = `-$${costoTotal.toFixed(2)}`;
-            document.getElementById('comisionDeMLa').textContent = `-$${comisionEnARS.toFixed(2)}`;
-            document.getElementById('cuotasDeMLa').textContent = `-$${costoCuotasARS.toFixed(2)}`;
-            document.getElementById('teQuedaNetoML').textContent = `$${teQuedaNeto.toFixed(2)}`;
+            document.getElementById('tuPrecioML').textContent = `$${formatearNumero(precioPersonalizado)}`;
+            document.getElementById('costoDeLaImpML').textContent = `-$${formatearNumero(costoTotal)}`;
+            document.getElementById('comisionDeMLa').textContent = `-$${formatearNumero(comisionEnARS)}`;
+            document.getElementById('cuotasDeMLa').textContent = `-$${formatearNumero(costoCuotasARS)}`;
+            document.getElementById('teQuedaNetoML').textContent = `$${formatearNumero(teQuedaNeto)}`;
             document.getElementById('margenSimML').textContent = `${margenSim}%`;
 
             const alertaSimulacion = document.getElementById('alertaSimulacionML');
@@ -1368,7 +1374,7 @@
                 alertaSimulacion.classList.remove('alert-warning');
                 alertaSimulacion.classList.add('alert-success');
                 document.getElementById('iconoAlertaML').textContent = '✅';
-                document.getElementById('textoAlertaSimML').textContent = `¡Excelente! Ganancia de $${teQuedaNeto.toFixed(2)}.`;
+                document.getElementById('textoAlertaSimML').textContent = `¡Excelente! Ganancia de $${formatearNumero(teQuedaNeto)}.`;
             }
         }
 
@@ -1382,14 +1388,15 @@
             
             if (!precioPersonalizado || precioPersonalizado <= 0) return;
 
-            const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+            const costoTotalText = document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.');
+            const costoTotal = parseFloat(costoTotalText);
             const teQuedaNeto = precioPersonalizado - costoTotal;
             const margenSim = ((teQuedaNeto / precioPersonalizado) * 100).toFixed(2);
 
             document.getElementById('resultadoSimulacionPersona').style.display = 'block';
-            document.getElementById('tuPrecioPersona').textContent = `$${precioPersonalizado.toFixed(2)}`;
-            document.getElementById('costoDeLaImpPersona').textContent = `-$${costoTotal.toFixed(2)}`;
-            document.getElementById('teQuedaNetoPersona').textContent = `$${teQuedaNeto.toFixed(2)}`;
+            document.getElementById('tuPrecioPersona').textContent = `$${formatearNumero(precioPersonalizado)}`;
+            document.getElementById('costoDeLaImpPersona').textContent = `-$${formatearNumero(costoTotal)}`;
+            document.getElementById('teQuedaNetoPersona').textContent = `$${formatearNumero(teQuedaNeto)}`;
             document.getElementById('margenSimPersona').textContent = `${margenSim}%`;
 
             const alertaSimulacion = document.getElementById('alertaSimulacionPersona');
@@ -1410,7 +1417,7 @@
                 alertaSimulacion.classList.remove('alert-warning');
                 alertaSimulacion.classList.add('alert-success');
                 document.getElementById('iconoAlertaPersona').textContent = '✅';
-                document.getElementById('textoAlertaSimPersona').textContent = `¡Excelente! Ganancia de $${teQuedaNeto.toFixed(2)}.`;
+                document.getElementById('textoAlertaSimPersona').textContent = `¡Excelente! Ganancia de $${formatearNumero(teQuedaNeto)}.`;
             }
         }
 
@@ -1434,7 +1441,8 @@
             let gananciaNeta = parseFloat(document.getElementById('gananciaNetaReg').value);
             
             if (!gananciaNeta || isNaN(gananciaNeta)) {
-                const costoTotal = parseFloat(document.getElementById('costoTotal').textContent.replace('$', ''));
+                const costoTotalText = document.getElementById('costoTotal').textContent.replace('$', '').replace(/\./g, '').replace(',', '.');
+                const costoTotal = parseFloat(costoTotalText);
                 
                 if (lugarVenta === 'ml') {
                     const comisionML = parseFloat(document.getElementById('categoriaML').value);
@@ -1495,8 +1503,8 @@
                     <td>${new Date(venta.fecha).toLocaleDateString('es-AR')}</td>
                     <td><strong>${venta.nombre}</strong></td>
                     <td>${lugarTexto}</td>
-                    <td>$${venta.precioVenta.toFixed(2)}</td>
-                    <td style="color: var(--success); font-weight: 600;">$${venta.gananciaNeta.toFixed(2)}</td>
+                    <td>$${formatearNumero(venta.precioVenta)}</td>
+                    <td style="color: var(--success); font-weight: 600;">$${formatearNumero(venta.gananciaNeta)}</td>
                     <td>${venta.margen}%</td>
                     <td>
                         <button onclick="eliminarVenta(${venta.id})" class="btn-danger" style="padding: 8px 12px; font-size: 0.85em; margin-top: 0;">🗑️</button>
@@ -1537,9 +1545,9 @@
                 : 0;
 
             document.getElementById('totalVentas').textContent = totalVentas;
-            document.getElementById('gananciaTotalVentas').textContent = `$${gananciaTotalVentas.toFixed(2)}`;
+            document.getElementById('gananciaTotalVentas').textContent = `$${formatearNumero(gananciaTotalVentas)}`;
             document.getElementById('margenPromedio').textContent = `${margenPromedioCalc}%`;
-            document.getElementById('ventaPromedio').textContent = `$${ventaPromedioCalc}`;
+            document.getElementById('ventaPromedio').textContent = `$${formatearNumero(parseFloat(ventaPromedioCalc))}`;
         }
 
         function exportarVentas() {
@@ -1611,7 +1619,7 @@
                 item.innerHTML = `
                     <div>
                         <strong style="color: var(--primary-dark);">${fil.nombre}</strong><br>
-                        <span style="color: var(--text-secondary); font-size: 0.9em;">$${fil.precio}/kg</span>
+                        <span style="color: var(--text-secondary); font-size: 0.9em;">$${formatearNumero(fil.precio)}/kg</span>
                     </div>
                     <button onclick="eliminarFilamento(${index})" class="btn-danger" style="padding: 6px 12px; font-size: 0.85em; margin-top: 0;">🗑️</button>
                 `;
