@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -98,13 +98,6 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 24px;
             margin-bottom: 30px;
         }
@@ -195,7 +188,7 @@
 
         .price-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
             margin-top: 20px;
         }
@@ -237,76 +230,6 @@
             font-size: 20px;
             font-weight: 700;
             color: #2c2c2c;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
-        .ml-section {
-            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
-            border: 2px solid #CE93D8;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 20px;
-        }
-
-        .ml-title {
-            font-size: 14px;
-            color: #7B1FA2;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
-        .ml-breakdown {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .ml-item {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid rgba(123, 31, 162, 0.2);
-        }
-
-        .ml-item-label {
-            font-size: 11px;
-            color: #7B1FA2;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-bottom: 6px;
-        }
-
-        .ml-item-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #7B1FA2;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
-        .ml-final {
-            background: white;
-            padding: 16px;
-            border-radius: 8px;
-            border: 2px solid #7B1FA2;
-            text-align: center;
-        }
-
-        .ml-final-label {
-            font-size: 12px;
-            color: #7B1FA2;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-bottom: 8px;
-        }
-
-        .ml-final-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #7B1FA2;
             font-family: 'Monaco', 'Courier New', monospace;
         }
 
@@ -513,10 +436,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
             .config-icon {
                 bottom: 20px;
                 right: 20px;
@@ -540,10 +459,6 @@
             .tab-btn {
                 padding: 10px 16px;
                 font-size: 14px;
-            }
-
-            .ml-breakdown {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -625,10 +540,7 @@
                         <div class="result-value" id="totalCost">$0</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- SECCIÓN MÁRGENES Y PRECIOS -->
-            <div class="grid-2">
                 <!-- Card: Márgenes Personalizados -->
                 <div class="card">
                     <h2>📊 Márgenes de Ganancia</h2>
@@ -652,9 +564,9 @@
                     </div>
                 </div>
 
-                <!-- Card: MERCADO LIBRE ANÁLISIS COMPLETO -->
+                <!-- Card: Precio Mercado Libre -->
                 <div class="card">
-                    <h2>🛒 Mercado Libre - Análisis de Ganancia</h2>
+                    <h2>🛒 Mercado Libre</h2>
                     <div class="form-group">
                         <label>Comisión ML (%)</label>
                         <input type="number" id="mlCommission" value="15.5" step="0.01" oninput="calculateCosts()">
@@ -665,40 +577,13 @@
                         <input type="number" id="shippingCost" value="0" min="0" oninput="calculateCosts()">
                         <p class="info-text">Costo a descontar</p>
                     </div>
-
-                    <!-- DESGLOSE MERCADO LIBRE -->
-                    <div class="ml-section">
-                        <div class="ml-title">Desglose de Ganancias en ML</div>
-                        
-                        <div class="ml-breakdown">
-                            <div class="ml-item">
-                                <div class="ml-item-label">Precio de Venta</div>
-                                <div class="ml-item-value" id="mlPrice">$0</div>
-                            </div>
-                            <div class="ml-item">
-                                <div class="ml-item-label">Comisión ML</div>
-                                <div class="ml-item-value" id="mlCommissionAmount">$0</div>
-                            </div>
-                            <div class="ml-item">
-                                <div class="ml-item-label">Costo Envío</div>
-                                <div class="ml-item-value" id="mlShippingAmount">$0</div>
-                            </div>
-                            <div class="ml-item">
-                                <div class="ml-item-label">Costo Producción</div>
-                                <div class="ml-item-value" id="mlProductionCost">$0</div>
-                            </div>
-                        </div>
-
-                        <div class="ml-final">
-                            <div class="ml-final-label">GANANCIA NETA EN ML</div>
-                            <div class="ml-final-value" id="mlNetProfit">$0</div>
-                        </div>
+                    <div class="result-box" style="background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%); border-color: #CE93D8;">
+                        <div class="result-label">Precio de Venta ML</div>
+                        <div class="result-value" id="mlPrice">$0</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Card: Registro de Ventas -->
-            <div class="grid">
+                <!-- Card: Registro de Ventas -->
                 <div class="card">
                     <h2>📝 Registrar Venta</h2>
                     <div class="form-group">
@@ -898,8 +783,6 @@
             const efficiency = parseFloat(document.getElementById('efficiency').value) || 95;
             const hours = parseFloat(document.getElementById('hours').value) || 0;
             const minutes = parseFloat(document.getElementById('minutes').value) || 0;
-            const mlCommission = parseFloat(document.getElementById('mlCommission').value) || 15.5;
-            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
 
             // Filamento necesario
             const filamentNeeded = weight / (efficiency / 100);
@@ -930,11 +813,12 @@
             // Precios con márgenes
             updateMarginPrices(totalCost);
 
-            // Calcular MERCADO LIBRE
-            calculateMLPricing(totalCost, mlCommission, shippingCost);
+            // Actualizar ML
+            const mlPrice = applyPsychologicalPrice(totalCost * (1 + selectedMargin / 100));
+            document.getElementById('mlPrice').textContent = `$${mlPrice.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
 
             // Actualizar input de precio final
-            document.getElementById('finalPrice').value = Math.floor(applyPsychologicalPrice(totalCost * (1 + selectedMargin / 100)));
+            document.getElementById('finalPrice').value = Math.floor(mlPrice);
 
             document.getElementById('personCost').value = Math.floor(totalCost);
         }
@@ -946,25 +830,6 @@
                 const psychologicalPrice = applyPsychologicalPrice(price);
                 document.getElementById(`margin-${margin}`).textContent = `$${psychologicalPrice.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
             });
-        }
-
-        function calculateMLPricing(totalCost, mlCommission, shippingCost) {
-            // Precio de venta con margen estándar
-            const priceWithMargin = totalCost * (1 + selectedMargin / 100);
-            const mlPrice = applyPsychologicalPrice(priceWithMargin);
-
-            // Comisión de ML
-            const mlCommissionAmount = mlPrice * (mlCommission / 100);
-
-            // Ganancia neta
-            const netProfit = mlPrice - mlCommissionAmount - shippingCost - totalCost;
-
-            // Mostrar valores
-            document.getElementById('mlPrice').textContent = `$${mlPrice.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('mlCommissionAmount').textContent = `-$${mlCommissionAmount.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('mlShippingAmount').textContent = `-$${shippingCost.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('mlProductionCost').textContent = `-$${totalCost.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
-            document.getElementById('mlNetProfit').textContent = `$${netProfit.toLocaleString('es-AR', {maximumFractionDigits: 0})}`;
         }
 
         function selectMargin(margin) {
@@ -1079,7 +944,7 @@
                         <div style="font-size: 12px; color: #28a745; margin-top: 4px;">+$${item.profit.toLocaleString('es-AR', {maximumFractionDigits: 0})}</div>
                     </div>
                     <div class="history-actions">
-                        <button class="btn-small" onclick="deleteHistory(${item.id})">Eliminar</button>
+                        <button class="btn-small delete" onclick="deleteHistory(${item.id})">Eliminar</button>
                     </div>
                 </div>
             `).join('');
